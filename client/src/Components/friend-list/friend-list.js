@@ -30,6 +30,7 @@ const FriendList = () => {
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [state, setState] = useState(initialState);
+  console.log(state)
   const [stats, setStats] = useState({});
   const [recs, setRecs] = useState([]);
   const userId = localStorage.getItem('userId');

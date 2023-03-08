@@ -10,9 +10,9 @@ const initialState = {
 };
 
 const Login = (props) => {
+
   let navigate = useNavigate();
   const [state, setState] = useState(initialState);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setState((prevState) => ({
