@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import auth from './../../utils/auth';
 import userService from './../../Services/UserService';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const initialState = {
   name: '',
@@ -46,7 +47,6 @@ const Register = (props) => {
 
   return (
     <section>
-      <h2>Register</h2>
       <form className="form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -54,6 +54,7 @@ const Register = (props) => {
           name="name"
           value={state.name}
           onChange={handleChange}
+          autoComplete="off"
         />
         <input
           type="text"
@@ -61,6 +62,7 @@ const Register = (props) => {
           name="email"
           value={state.email}
           onChange={handleChange}
+          autoComplete="off"
         />
         <input
           type="password"
@@ -69,9 +71,9 @@ const Register = (props) => {
           value={state.password}
           onChange={handleChange}
         />
-        <button className="form-submit" type="submit" disabled={validateForm()}>
+        <Button variant="outlined" className="form-submit" type="submit" disabled={validateForm()}>
           &nbsp;Register&nbsp;
-        </button>
+        </Button>
       </form>
     </section>
   );

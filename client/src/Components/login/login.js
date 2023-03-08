@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import auth from './../../utils/auth';
 import userService from './../../Services/UserService';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const initialState = {
   email: '',
@@ -45,7 +46,6 @@ const Login = (props) => {
 
   return (
     <section>
-      <h2>Login</h2>
       <form className="form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -53,6 +53,7 @@ const Login = (props) => {
           name="email"
           value={state.email}
           onChange={handleChange}
+          autoComplete="off"
         />
         <input
           type="password"
@@ -61,9 +62,9 @@ const Login = (props) => {
           value={state.password}
           onChange={handleChange}
         />
-        <button className="form-submit" type="submit" disabled={validateForm()}>
+        <Button variant="outlined" className="form-submit" type="submit" disabled={validateForm()}>
           &nbsp;Login&nbsp;
-        </button>
+        </Button>
       </form>
     </section>
   );

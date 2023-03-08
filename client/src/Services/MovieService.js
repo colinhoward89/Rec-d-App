@@ -1,9 +1,9 @@
 const BASE_URL = 'http://localhost:3001';
 
-const musicService = {};
+const movieService = {};
 
-musicService.getSearchResults = (query) => {
-  return fetch(`${BASE_URL}/music/search/${query}`, {
+movieService.getSearchResults = (query) => {
+  return fetch(`${BASE_URL}/movie/search/${query}`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
@@ -13,4 +13,4 @@ musicService.getSearchResults = (query) => {
     .catch((err) => console.log(err));
 };
 
-export default musicService;
+export default movieService;

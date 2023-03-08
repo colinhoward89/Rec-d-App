@@ -8,7 +8,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ForwardIcon from '@mui/icons-material/Forward';
@@ -17,8 +16,14 @@ import StarIcon from '@mui/icons-material/Star';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import MovieIcon from '@mui/icons-material/Movie';
+import TvIcon from '@mui/icons-material/Tv';
+import BookIcon from '@mui/icons-material/Book';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import CasinoIcon from '@mui/icons-material/Casino';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -60,14 +65,50 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(handleShowRated) {
+  const [typeEl, setTypeEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('music');
   const userId = localStorage.getItem('userId');
   let navigate = useNavigate();
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleTypeClick = (event) => {
+    setTypeEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setTypeEl(null);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    if (index === 0) {
+      setSearchType('music');
+    } else if (index === 1) {
+      setSearchType('movie');
+    } else if (index === 2) {
+      setSearchType('tv');
+    } else if (index === 3) {
+      setSearchType('book');
+    } else if (index === 4) {
+      setSearchType('video');
+    } else if (index === 5) {
+      setSearchType('board');
+    }
+    handleClose();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate(`/search/${encodeURIComponent(searchQuery)}`);
+    navigate(`/${encodeURIComponent(searchType)}/search/${encodeURIComponent(searchQuery)}`, {
+      state: {
+        searchType: searchType,
+        searchQuery: searchQuery
+      }
+    });
     setSearchQuery('');
   };
 
@@ -139,6 +180,9 @@ export default function PrimarySearchAppBar() {
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           color="inherit"
+          onClick={() => {
+            navigate(`/user/${userId}/profile`);
+          }}
         >
           <AccountCircle />
         </IconButton>
@@ -149,6 +193,9 @@ export default function PrimarySearchAppBar() {
           size="large"
           aria-label="friends"
           color="inherit"
+          onClick={() => {
+            navigate(`/user/${userId}/friends`);
+          }}
         >
           <Diversity1Icon />
         </IconButton>
@@ -159,7 +206,9 @@ export default function PrimarySearchAppBar() {
           size="large"
           aria-label="my-recs"
           color="inherit"
-          onClick={() => navigate(`/user/${userId}/recs`)}
+          onClick={() => {
+            navigate(`/user/${userId}/recs`);
+          }}
         >
           <CallReceivedIcon />
         </IconButton>
@@ -167,9 +216,12 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
       <MenuItem>
         <IconButton
-          size="large"
+          size="medium"
           aria-label="my-ratings"
           color="inherit"
+          onClick={() => {
+            navigate(`/user/${userId}/ratings`);
+          }}
         >
           <StarIcon />
         </IconButton>
@@ -180,10 +232,26 @@ export default function PrimarySearchAppBar() {
           size="large"
           aria-label="sent-recs"
           color="inherit"
+          onClick={() => {
+            navigate(`/user/${userId}/sentrecs`);
+          }}
         >
           <ForwardIcon />
         </IconButton>
         <p>Sent Recs</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="logout"
+          color="inherit"
+          onClick={() => {
+            navigate(`/logout`);
+          }}
+        >
+          <LogoutIcon />
+        </IconButton>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );
@@ -211,46 +279,92 @@ export default function PrimarySearchAppBar() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
             />
+            <IconButton
+              size="large"
+              edge="start"
+              aria-label="type"
+              color="inherit"
+              onClick={handleTypeClick}
+            >
+              {searchType === 'music' ? <MusicNoteIcon /> : searchType === 'movie' ? <MovieIcon /> : searchType === 'tv' ? <TvIcon /> : <BookIcon />}
+            </IconButton>
+            <Menu
+              anchorEl={typeEl}
+              open={Boolean(typeEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 0)}><MusicNoteIcon />&nbsp;&nbsp;Music</MenuItem>
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 1)}><MovieIcon />&nbsp;&nbsp;Movies</MenuItem>
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 2)}><TvIcon />&nbsp;&nbsp;TV</MenuItem>
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 3)}><BookIcon />&nbsp;&nbsp;Books</MenuItem>
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 4)}><VideogameAssetIcon />&nbsp;&nbsp;Video Games</MenuItem>
+              <MenuItem onClick={(e) => handleMenuItemClick(e, 5)}><CasinoIcon />&nbsp;&nbsp;Board Games</MenuItem>
+            </Menu>
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
+              style={{ marginRight: '0' }}
               size="large"
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               color="inherit"
+              onClick={() => {
+                navigate(`/user/${userId}/profile`);
+              }}
             >
               <AccountCircle />
             </IconButton>
             <IconButton
-              size="medium"
+              size="large"
               aria-label="friends"
               color="inherit"
+              onClick={() => {
+                navigate(`/user/${userId}/friends`);
+              }}
             >
               <Diversity1Icon />
             </IconButton>
             <IconButton
-          size="large"
-          aria-label="my-recs"
-          color="inherit"
-          onClick={() => navigate(`/user/${userId}/recs`)}
-        >
-          <CallReceivedIcon />
+              size="large"
+              aria-label="my-recs"
+              color="inherit"
+              onClick={() => navigate(`/user/${userId}/recs`)}
+            >
+              <CallReceivedIcon />
             </IconButton>
             <IconButton
               size="medium"
               aria-label="my-ratings"
               color="inherit"
+              onClick={() => {
+                navigate(`/user/${userId}/ratings`);
+              }}
             >
               <StarIcon />
             </IconButton>
             <IconButton
+              style={{ marginLeft: '5px' }}
               size="medium"
               aria-label="sent-recs"
               color="inherit"
+              onClick={() => {
+                navigate(`/user/${userId}/sentrecs`);
+              }}
             >
               <ForwardIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="logout"
+              color="inherit"
+              onClick={() => {
+                navigate(`/logout`);
+              }}
+            >
+              <LogoutIcon />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -269,6 +383,6 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </Box >
   );
 }

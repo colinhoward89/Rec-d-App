@@ -1,15 +1,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import recService from './../../Services/RecService';
 import userService from '../../Services/UserService';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
 export default function RecFormDialog({ rec }) {
   const [urgent, setUrgent] = React.useState(false);
@@ -17,23 +10,29 @@ export default function RecFormDialog({ rec }) {
   const [sourceComment, setSourceComment] = React.useState('');
   const [source, setSource] = useState(null);
   const [options, setOptions] = useState([]);
+  const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchSources = async () => {
       const user = await userService.getUserInfo();
       if (user) {
-        const source = user.sources;
-        const sourceNames = await userService.getSourcesNames(source);
-        const sourceNamesArray = [];
-        sourceNamesArray.push({ id: source, name: sourceNames.name });
-        setOptions(sourceNamesArray)
+        const sources = user.sources;
+        const sourceNamesArray = await Promise.all(
+          sources.map(async (source) => {
+            const sourceName = await userService.getSourceName(source);
+            return { id: source, name: sourceName.name, type: sourceName.type };
+          })
+        );
+        const otherSources = sourceNamesArray.filter((source) => source.type === 'source');
+        setOptions(otherSources);
+        setFetchSourcesComplete(true);
       } else {
         console.log('No user info found 😞');
       }
     };
     fetchSources();
-  }, []);
+  }, [fetchSourcesComplete]);
 
   const handleClose = () => {
     setOpen(false);
@@ -57,7 +56,7 @@ export default function RecFormDialog({ rec }) {
   };
 
   const handleAddToRecs = async (rec) => {
-    const res = await recService.saveRec(rec, userId, source.id[0], sourceComment, urgent);
+    const res = await recService.saveRec(rec, userId, source.id, sourceComment, urgent);
     if (res.error) {
       alert(`Error: ${res.message}`);
     } else {
@@ -76,7 +75,7 @@ export default function RecFormDialog({ rec }) {
           <Autocomplete
             id="source"
             options={options}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.name.charAt(0).toUpperCase() + option.name.slice(1)}
             fullWidth
             value={source}
             onChange={handleSourceChange}
@@ -103,6 +102,9 @@ export default function RecFormDialog({ rec }) {
             variant="standard"
             checked={urgent}
             onChange={handleUrgentChange}
+            InputProps={{
+              disableUnderline: true,
+              style: { textDecoration: 'none' }}}
           />
         </DialogContent>
         <DialogActions>

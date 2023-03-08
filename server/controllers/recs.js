@@ -12,6 +12,17 @@ const getRecs = async (req, res) => {
   }
 };
 
+const getSentRecs = async (req, res) => {
+  try {
+    const source = req.params.userId;
+    const userRecs = await recs.find({ source });
+    return res.status(200).send(userRecs);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+};
+
 const saveRec = async (req, res) => {
   try {
     const { to, source, sourceComment, mediaId, type, title, author, image, year, urgent } = req.body;
@@ -49,4 +60,4 @@ const updateRec = async (req, res) => {
   }
 };
 
-module.exports = { getRecs, saveRec, updateRec, saveRating };
+module.exports = { getRecs, saveRec, updateRec, saveRating, getSentRecs };

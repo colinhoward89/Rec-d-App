@@ -47,10 +47,11 @@ export default function RatingFormDialog({ rec }) {
         const sourceNamesArray = await Promise.all(
           sources.map(async (source) => {
             const sourceName = await userService.getSourceName(source);
-            return { id: source, name: sourceName.name };
+            return { id: source, name: sourceName.name, type: sourceName.type };
           })
         );
-        setOptions(sourceNamesArray);
+        const otherSources = sourceNamesArray.filter((source) => source.type === 'source');
+        setOptions(otherSources);
         setFetchRecipientsComplete(true);
       } else {
         console.log('No user info found 😞');
@@ -115,7 +116,6 @@ export default function RatingFormDialog({ rec }) {
   };
 
   const handleAddRatingToRec = async (rec) => {
-    console.log(rec)
     const res = await recService.updateRating(userId, rec._id, value, ratingComment);
     if (res.error) {
       alert(`Error: ${res.message}`);

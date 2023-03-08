@@ -37,16 +37,16 @@ userService.getUserInfo = () => {
     .catch((err) => console.log(err));
 };
 
-userService.getSourcesNames = (source) => {
-  return fetch(`${BASE_URL}/user/${source}`, {
-    method: 'GET',
-    credentials: 'include',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
-};
+// userService.getSourcesNames = (source) => {
+//   return fetch(`${BASE_URL}/user/${source}`, {
+//     method: 'GET',
+//     credentials: 'include',
+//     mode: 'cors',
+//     headers: { 'Content-Type': 'application/json' },
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.log(err));
+// };
 
 userService.getSourceName = (source) => {
   return fetch(`${BASE_URL}/username/${source}`, {

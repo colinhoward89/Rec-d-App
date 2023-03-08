@@ -25,9 +25,10 @@ export default function SendRecFormDialog({ rec }) {
         const sources = user.sources;        
         const sourceNamesArray = await Promise.all(sources.map(async (source) => {
           const sourceName = await userService.getSourceName(source);
-          return { id: source, name: sourceName.name };
+          return { id: source, name: sourceName.name, type: sourceName.type };
         }));
-        setOptions(sourceNamesArray);
+        const userSources = sourceNamesArray.filter((source) => source.type === 'user');
+        setOptions(userSources);
       } else {
         console.log('No user info found 😞');
       }

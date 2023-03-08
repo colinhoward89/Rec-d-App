@@ -13,6 +13,17 @@ recService.getUserRecs = (userId) => {
     .catch((err) => console.log(err));
 };
 
+recService.getSentRecs = (userId) => {
+  return fetch(`${BASE_URL}/user/${userId}/sentrecs`, {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
 recService.saveRec = (rec, userId, source, sourceComment, urgent) => {  
   const to = userId;
   const mediaId = rec.mediaId;

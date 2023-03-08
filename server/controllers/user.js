@@ -40,8 +40,8 @@ const login = async (req, res) => {
 
 const profile = async (req, res) => {
   try {
-    const { _id, name, sources } = req.user;
-    const user = { _id, name, sources };
+    const { _id, name, email, image, sources } = req.user;
+    const user = { _id, name, email, image, sources };
     res.status(200).send(user);
   } catch {
     res.status(404).send({ error, message: 'User not found' });
@@ -49,7 +49,6 @@ const profile = async (req, res) => {
 };
 
 const getSources = async (req, res) => {
-  console.log(req.params)
   try {
     const _id = req.params.source;
     const user = await User.findOne({ _id: _id });
