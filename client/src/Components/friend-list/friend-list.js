@@ -124,9 +124,9 @@ const FriendList = () => {
           <TableRow>
             <TableCell align="center">Source</TableCell>
             <TableCell align="center">Type</TableCell>
-            {/* <TableCell align="center">Recs</TableCell>
+            <TableCell align="center">Recs</TableCell>
             <TableCell align="center">Ratings</TableCell>
-            <TableCell align="center">Total</TableCell> */}
+            <TableCell align="center">Total</TableCell>
             <TableCell align="center">Average</TableCell>
           </TableRow>
         </TableHead>
@@ -145,7 +145,7 @@ const FriendList = () => {
                       ? "TV"
                       : type.charAt(0).toUpperCase() + type.slice(1)}
                   </TableCell>
-                  {/* <TableCell align="center">
+                  <TableCell align="center">
                     {stats[source][type].totalRecs}
                   </TableCell>
                   <TableCell align="center">
@@ -153,7 +153,7 @@ const FriendList = () => {
                   </TableCell>
                   <TableCell align="center">
                     {stats[source][type].totalScore}
-                  </TableCell> */}
+                  </TableCell>
                   <TableCell align="center">
                     {stats[source][type].averageScore === 0
                       ? '-'

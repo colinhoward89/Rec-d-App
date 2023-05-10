@@ -6,6 +6,7 @@ const spotifyApi = require('./controllers/music-search');
 const omdb = require('./controllers/movie-search');
 const tvmaze = require('./controllers/tv-search');
 const openLibrary = require('./controllers/book-search');
+const boardGameGeek = require('./controllers/boardgame-search');
 
 router.post('/register', userController.create);
 router.post('/login', userController.login);
@@ -62,6 +63,17 @@ router.get('/book/search/:query', async (req, res) => {
   } catch (error) {
     console.error(`Error fetching book results: ${error.message}`);
     res.status(500).json({ error: 'Error fetching book results' });
+  }
+});
+
+router.get('/boardgame/search/:query', async (req, res) => {
+  const query = req.params.query;
+  try {
+    const results = await boardGameGeek.getSearchResults(query);
+    res.json(results);
+  } catch (error) {
+    console.error(`Error fetching board game results: ${error.message}`);
+    res.status(500).json({ error: 'Error fetching board game results' });
   }
 });
 
