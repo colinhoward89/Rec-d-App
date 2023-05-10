@@ -7,6 +7,7 @@ const omdb = require('./controllers/movie-search');
 const tvmaze = require('./controllers/tv-search');
 const openLibrary = require('./controllers/book-search');
 const boardGameGeek = require('./controllers/boardgame-search');
+const videoGameSearch = require('./controllers/videogame-search');
 
 router.post('/register', userController.create);
 router.post('/login', userController.login);
@@ -74,6 +75,17 @@ router.get('/boardgame/search/:query', async (req, res) => {
   } catch (error) {
     console.error(`Error fetching board game results: ${error.message}`);
     res.status(500).json({ error: 'Error fetching board game results' });
+  }
+});
+
+router.post('/videogame/search/:query', async (req, res) => {
+  const query = req.params.query;
+  try {
+    const results = await videoGameSearch.getSearchResults(query);
+    res.json(results);
+  } catch (error) {
+    console.error(`Error fetching video game results: ${error.message}`);
+    res.status(500).json({ error: 'Error fetching video game results' });
   }
 });
 

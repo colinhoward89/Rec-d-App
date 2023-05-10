@@ -13,6 +13,8 @@ import musicService from '../../Services/MusicService';
 import movieService from '../../Services/MovieService';
 import tvService from '../../Services/TVService';
 import bookService from '../../Services/BookService';
+import boardGameService from '../../Services/BoardGameService';
+import videoGameService from '../../Services/VideoGameService';
 import RecFormDialog from '../rec-add/rec-add';
 import RatingFormDialog from '../rating-add/rating-add';
 import SendRecFormDialog from '../rec-send/rec-send';
@@ -87,6 +89,32 @@ function SearchList() {
             year: item.first_publish_year,
             image: item.imageUrl,
             type: 'book'
+          }));
+          setSearchResults([...modifiedResults])
+        })
+    } else if (searchtype === 'video') {
+      videoGameService.getSearchResults(query)
+        .then(results => {
+          const modifiedResults = results.map(item => ({
+            mediaId: item.id,
+            author: item.author,
+            title: item.name,
+            year: item.first_publish_year,
+            image: item.imageUrl,
+            type: 'video'
+          }));
+          setSearchResults([...modifiedResults])
+        })
+    } else if (searchtype === 'board') {
+      boardGameService.getSearchResults(query)
+        .then(results => {
+          const modifiedResults = results.map(item => ({
+            mediaId: item.id,
+            author: item.author,
+            title: item.name,
+            year: item.year,
+            image: item.imageUrl,
+            type: 'board'
           }));
           setSearchResults([...modifiedResults])
         })

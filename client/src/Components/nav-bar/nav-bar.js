@@ -286,7 +286,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
               color="inherit"
               onClick={handleTypeClick}
             >
-              {searchType === 'music' ? <MusicNoteIcon /> : searchType === 'movie' ? <MovieIcon /> : searchType === 'tv' ? <TvIcon /> : <BookIcon />}
+              {searchType === 'music' ? <MusicNoteIcon /> : searchType === 'movie' ? <MovieIcon /> : searchType === 'tv' ? <TvIcon /> : searchType === 'book' ? <BookIcon /> : searchType === 'video' ? <VideogameAssetIcon /> : <CasinoIcon />}
             </IconButton>
             <Menu
               anchorEl={typeEl}
