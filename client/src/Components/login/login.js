@@ -5,7 +5,6 @@ import React, { useContext } from 'react';;
 
 const Login = () => {
   const { loginWithRedirect } = useAuth0();
-  const { isAuthenticated, handleGetUser } = useContext(Context);
 
   const handleLogin = async () => {
     await loginWithRedirect({

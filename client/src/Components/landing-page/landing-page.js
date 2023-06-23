@@ -36,8 +36,8 @@ const LandingPage = () => {
       <h2>Find your next favourite <span style={{ color: 'red' }}>{text[0]}</span> faster!</h2>
       <h2>Receive <span style={{ color: 'red' }}>{text[1]}</span> recommendations from friends</h2>
       <h2><span style={{ color: 'red' }}>{text[2]}</span> to your rec and give it a rating</h2>
-      {/* <h2>See it in action</h2>
-      <p>embedded YouTube video</p> */}
+      <h2>See it in action</h2>
+      <p>embedded YouTube video</p>
       <h1>What are you waiting for? Get Rec'd today!</h1>
       <div className={styles.LandingPage}>
         <Login />

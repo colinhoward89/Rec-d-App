@@ -159,9 +159,13 @@ function SearchList() {
                     ) : (
                       <img src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg" alt={rec.title} style={{ width: '100px', height: '100px' }} />
                     )
-                  ) : (
-                    <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
-                  )}
+                  ) : rec.type === 'video' ? (
+                    <img src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png" alt={rec.title} style={{ width: '100px', height: 'auto' }} />
+                  ) : rec.type === 'board' ? (
+                    <img src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg" alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                  ) : rec.type === 'movie' || rec.type === 'tv' ? (
+                    <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }}/>}
                 </TableCell>
                 <TableCell><Stack direction="column" spacing={1} justifyContent="left" alignItems="flex-start"><Item>{rec.title}</Item><Item>{rec.author}</Item><Item>{rec.year}</Item></Stack></TableCell>
                 <TableCell>

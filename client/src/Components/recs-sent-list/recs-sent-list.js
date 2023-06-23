@@ -19,6 +19,9 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import MovieIcon from '@mui/icons-material/Movie';
 import TvIcon from '@mui/icons-material/Tv';
 import BookIcon from '@mui/icons-material/Book';
+import CasinoIcon from '@mui/icons-material/Tv';
+import VideogameAssetIcon from '@mui/icons-material/Book';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import Box from '@mui/material/Box';
 import { Context } from '../../Context';
 
@@ -83,7 +86,7 @@ function RecSentList() {
         <Table sx={{ minWidth: 200 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-            <TableCell colSpan={3} align="center" ><Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2'}}>Recs Sent</Box></TableCell>
+              <TableCell colSpan={3} align="center" ><Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}>Recs Sent</Box></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -91,24 +94,31 @@ function RecSentList() {
               <TableRow
                 key={rec._id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >                <TableCell component="th" scope="row">
+              >
+                <TableCell component="th" scope="row">
                   {rec.type === 'book' ? (
                     rec.image ? (
                       <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
                     ) : (
                       <img src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg" alt={rec.title} style={{ width: '100px', height: '100px' }} />
                     )
-                  ) : (
-                    <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
-                  )}
+                  ) : rec.type === 'video' ? (
+                    <img src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png" alt={rec.title} style={{ width: '100px', height: 'auto' }} />
+                  ) : rec.type === 'board' ? (
+                    <img src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg" alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                  ) : rec.type === 'movie' || rec.type === 'tv' ? (
+                    <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />}
                 </TableCell>
                 <TableCell>
                   <Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
                     <Item>
                       {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
-                      {rec.type === 'movie' && <MovieIcon fontSize=""/>}
-                      {rec.type === 'tv' && <TvIcon fontSize=""/>}
-                      {rec.type === 'book' && <BookIcon fontSize=""/>}
+                      {rec.type === 'movie' && <MovieIcon fontSize="" />}
+                      {rec.type === 'tv' && <TvIcon fontSize="" />}
+                      {rec.type === 'book' && <BookIcon fontSize="" />}
+                      {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
+                      {rec.type === 'board' && <CasinoIcon fontSize="" />}
                     </Item>
                     <Item>{rec.title}</Item>
                     <Item>{rec.author}</Item>
@@ -119,6 +129,15 @@ function RecSentList() {
                       {options.find(option => option.id === rec.to)?.name.charAt(0).toUpperCase() + options.find(option => option.id === rec.to)?.name.slice(1)}
                     </Item>
                     <Item>{new Date(rec.recDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Item>
+                    {rec.sourceComment && (
+                      <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                        <p>
+                          <span className="tooltip">
+                            <ChatBubbleOutlineIcon />
+                            <span className="tooltiptext">{rec.sourceComment}</span>
+                          </span>
+                        </p>
+                      </Item>)}
                   </Stack>
                 </TableCell>
                 <TableCell>
@@ -127,6 +146,14 @@ function RecSentList() {
                     precision={0.5}
                     emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                   />
+                  {rec.ratingComment && (
+                    <p>
+                      <span className="tooltip">
+                        <ChatBubbleOutlineIcon style={{ verticalAlign: 'top', height: '20px' }} />
+                        <span className="tooltiptext">{rec.ratingComment}</span>
+                      </span>
+                    </p>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
