@@ -77,3 +77,39 @@ export const logout = () => {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
+
+export const saveSource = (userId, newSource) => {  
+  return fetch(`${BASE_URL}/newSource`, {
+    method: 'POST',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, newSource })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
+export const inviteFriend = (userId, newFriend) => {  
+  return fetch(`${BASE_URL}/invitefriend`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, newFriend })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
+export const friendRequests = (userId) => {  
+  const queryString = `userId=${userId}`;
+  return fetch(`${BASE_URL}/friendrequests?${queryString}`, {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};

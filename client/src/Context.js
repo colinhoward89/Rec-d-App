@@ -5,9 +5,7 @@ import * as userService from './Services/UserService';
 const Context = createContext([[], () => null]);
 
 const ContextProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth0();
-  const { isLoading } = useAuth0();
-  const { user } = useAuth0();
+  const { isAuthenticated, isLoading, user } = useAuth0();
   const [currentUser, setCurrentUser] = useState({
     email: '',
     name: '',
@@ -15,9 +13,6 @@ const ContextProvider = ({ children }) => {
     sources: '',
     id: '',
   });
-
-  console.log(currentUser)
-  console.log(user && user.email ? user.email : "null");
 
   const handleGetUser = async () => {
     console.log("being called")
@@ -60,14 +55,19 @@ const ContextProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = () => {
+    console.log("refresh user")
+    handleGetUser();
+  };
+
   // const handleUpdateUser = async (updatedUser) => {
   //   const receivedUser = await userService.updateUser({
   //     id: currentUser.id,
   //     email: updatedUser.email === '' ? currentUser.email : updatedUser.email,
   //     name: updatedUser.name === currentUser.name ? currentUser.name : updatedUser.name,
   //   });
-    
-    
+
+
   //   if (receivedUser) {
   //     setCurrentUser({
   //       ...currentUser,
@@ -85,20 +85,20 @@ const ContextProvider = ({ children }) => {
   //   isAuthenticated,
   //   handleGetUser,
   // };
+  const contextValue = {
+    user,
+    currentUser,
+    isAuthenticated,
+    setCurrentUser,
+    handleGetUser,
+    handleCreateUser,
+    refreshUser,
+    // handleUpdateUser,
+    isLoading,
+  };
 
   return (
-    <Context.Provider
-      value={{
-        user,
-        currentUser,
-        isAuthenticated,
-        setCurrentUser,
-        handleGetUser,
-        handleCreateUser,
-        // handleUpdateUser,
-        isLoading,
-      }}
-    >
+    <Context.Provider value={contextValue}>
       {children}
     </Context.Provider>
   );

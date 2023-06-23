@@ -16,6 +16,9 @@ router.get('/user/:userId/profile', userController.profile);
 // router.post('/logout', userController.logout);
 router.get('/user/:source', userController.getSources);
 router.get('/username/:source', userController.getSourceName);
+router.post('/newsource', userController.newSource);
+router.put('/invitefriend', userController.inviteFriend);
+router.get('/friendrequests', userController.friendRequests);
 
 router.get('/recs', recsController.getRecs);
 router.get('/user/:userId/sentrecs', recsController.getSentRecs);

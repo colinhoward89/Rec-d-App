@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
 import styles from './rec-list.module.css';
 import recService from './../../Services/RecService';
 import Table from '@mui/material/Table';

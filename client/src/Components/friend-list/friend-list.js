@@ -7,6 +7,9 @@ import Box from '@mui/material/Box';
 import * as userService from './../../Services/UserService';
 import recService from '../../Services/RecService';
 import { Context } from '../../Context';
+import SourceFormDialog from '../add-source/add-source';
+import FriendFormDialog from '../add-friend/add-friend';
+import FriendRequestsFormDialog from '../friend-requests/friend-requests';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,7 +24,11 @@ const FriendList = () => {
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [stats, setStats] = useState({});
+  const [requestsSeen, setRequestsSeen] = useState(false);
+  const [addFriendSeen, setAddFriendSeen] = useState(false);
+  const [addSourceSeen, setAddSourceSeen] = useState(false);
   const [recs, setRecs] = useState([]);
+
 
   useEffect(() => {
     getUserRecommendations(userId)
@@ -39,6 +46,7 @@ const FriendList = () => {
           })
         );
         setOptions(sourceNamesArray);
+
         setFetchSourcesComplete(true);
       } else {
         console.log('No sources found')
@@ -98,12 +106,45 @@ const FriendList = () => {
       });
   }
 
+  const sourcesWithRecs = Object.keys(stats).filter((sourceId) => {
+    const sourceStats = stats[sourceId];
+    return Object.keys(sourceStats).some((type) => sourceStats[type].totalRecs > 0);
+  });
+
+  const sourcesWithoutRecs = options.filter((option) => !sourcesWithRecs.includes(option.id));
+  
+  function toggleRequestsPop() {
+    setRequestsSeen(!requestsSeen);
+  }
+
+  function toggleAddFriendPop() {
+    setAddFriendSeen(!addFriendSeen);
+  }
+
+  function toggleAddSourcePop() {
+    setAddSourceSeen(!addSourceSeen);
+  }
+
+  function handleRequests() {
+    setRequestsSeen(false);
+  }
+
+  function handleFriendAdd() {
+    setAddFriendSeen(false);
+  }
+
+  function handleSourceAdd() {
+    setAddSourceSeen(false);
+  }
+
   return (
     <div>
-      <Button variant="contained">Requests ()</Button>
-      <Button variant="contained">Invite Friend</Button>
-      <div>
-        <TableContainer component={Paper} className={styles.RecList}>
+      <br></br>
+      <Button variant="contained" onClick={() => toggleRequestsPop()}>Requests (0)</Button>
+      <Button variant="contained" onClick={() => toggleAddFriendPop()}>Add Friend</Button>
+      <Button variant="contained" onClick={() => toggleAddSourcePop()}>Add Source</Button>
+      <div className={styles.RecList}>
+        <TableContainer component={Paper}>
           <Table sx={{ minWidth: 200 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -123,43 +164,67 @@ const FriendList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(stats)
-                .sort()
-                .flatMap((source) =>
-                  Object.keys(stats[source]).map((type) => (
-                    <TableRow key={`${source}-${type}`}>
+              {sourcesWithRecs.map((sourceId) => {
+                const option = options.find((o) => o.id === sourceId);
+                if (!option) return null;
+                const { id, name } = option;
+                const sourceName = name.charAt(0).toUpperCase() + name.slice(1);
+                const sourceStats = stats[id];
+
+                return Object.keys(sourceStats).map((type) => {
+                  const { totalRecs, totalRatings, totalScore, averageScore } = sourceStats[type];
+
+                  return (
+                    <TableRow key={`${id}-${type}`}>
                       <TableCell component="th" scope="row" align="center">
-                        {getSourceName(source).charAt(0).toUpperCase() +
-                          getSourceName(source).slice(1)}
+                        {sourceName}
                       </TableCell>
                       <TableCell align="center">
-                        {type === "tv"
-                          ? "TV"
-                          : type.charAt(0).toUpperCase() + type.slice(1)}
+                        {type === 'tv' ? 'TV' : type.charAt(0).toUpperCase() + type.slice(1)}
                       </TableCell>
+                      <TableCell align="center">{totalRecs}</TableCell>
+                      <TableCell align="center">{totalRatings}</TableCell>
+                      <TableCell align="center">{totalScore}</TableCell>
                       <TableCell align="center">
-                        {stats[source][type].totalRecs}
-                      </TableCell>
-                      <TableCell align="center">
-                        {stats[source][type].totalRatings}
-                      </TableCell>
-                      <TableCell align="center">
-                        {stats[source][type].totalScore}
-                      </TableCell>
-                      <TableCell align="center">
-                        {stats[source][type].averageScore === 0
-                          ? '-'
-                          : stats[source][type].averageScore}
+                        {averageScore === 0 ? '-' : averageScore}
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
+                  );
+                });
+              })}
+              {sourcesWithoutRecs.map((option) => {
+                const { id, name } = option;
+                const sourceName = name.charAt(0).toUpperCase() + name.slice(1);
+
+                return (
+                  <TableRow key={id}>
+                    <TableCell component="th" scope="row" align="center">
+                      {sourceName}
+                    </TableCell>
+                    <TableCell colSpan={5} align="center">
+                      No recommendations received
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
+      {requestsSeen ? <FriendRequestsFormDialog
+        open={requestsSeen}
+        onSubmit={handleRequests}
+      /> : null}
+      {addFriendSeen ? <FriendFormDialog
+        open={addFriendSeen}
+        onSubmit={handleFriendAdd}
+      /> : null}
+      {addSourceSeen ? <SourceFormDialog
+        open={addSourceSeen}
+        onSubmit={handleSourceAdd}
+      /> : null}
     </div>
   );
-}
+};
 
 export default FriendList;

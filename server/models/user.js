@@ -9,34 +9,20 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // email: {
-  //   type: String,
-  //   required: function() {
-  //     return this.type === 'user';
-  //   },
-  //   validate: {
-  //     validator: function(v) {
-  //       // If there is no email address, don't require a password
-  //       if (!v) {
-  //         return true;
-  //       }
-  //       // If there is an email address, require a password for users
-  //       return this.type === 'user' && this.password && this.password.length >= 6;
-  //     },
-  //     message: props => `A password is required for an email address`
-  //   }
-  // },
   email: {
     type: String,
-    required: true
+    required: false,
   },
-  // password: {
-  //   type: String,
-  //   required: function() {
-  //     return this.type === 'user';
-  //   },
-  //   minlength: 6
-  // },
+  requestRec: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+    required: false,
+  },
+  requestSent: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+    required: false,
+  },
   image: {
     type: String,
     required: false,

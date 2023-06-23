@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar(handleShowRated) {
   const { currentUser } = useContext(Context)
-  const userId = currentUser.id;
+  const userId = currentUser?.id;
   const [typeEl, setTypeEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('music');

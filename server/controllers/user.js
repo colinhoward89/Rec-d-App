@@ -1,28 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('./../models/user');
 
-// const create = async (req, res) => {
-//   const { email } = req.body;
-//   const user = await User.findOne({ email: email });
-//   if (user)
-//     return res
-//       .status(409)
-//       .send({ error: '409', message: 'User already exists' });
-//   try {
-//     if (password === '') throw new Error();
-//     const hash = await bcrypt.hash(password, 10);
-//     const newUser = new User({
-//       ...req.body,
-//       password: hash,
-//     });
-//     const user = await newUser.save();
-//     req.session.uid = user._id;
-//     res.status(201).send(user);
-//   } catch (error) {
-//     res.status(400).send({ error, message: 'Could not create user' });
-//   }
-// };
-
 const create = async (req, res) => {
 try {
   const user = await User.create(req.body);
@@ -122,17 +100,54 @@ const getSourceName = async (req, res) => {
   }
 };
 
-// const logout = (req, res) => {
-//   req.session.destroy((error) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .send({ error, message: 'Could not log out, please try again' });
-//     } else {
-//       res.clearCookie('sid');
-//       res.status(200).send({ message: 'Logout successful' });
-//     }
-//   });
-// };
+const newSource = async (req, res) => {
+  try {
+    const { userId, newSource } = req.body;
+    const source = await User.create(newSource);
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $push: { sources: source._id } },
+      { new: true }
+    );
+    res.status(200).json({ user, source });
+  } catch (err) {
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
 
-module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName };
+const inviteFriend = async (req, res) => {
+  try {
+    const { userId, newFriend } = req.body;
+    const recipient = await User.findOneAndUpdate(
+      { email: newFriend },
+      { $push: { requestRec: userId } },
+      { new: true }
+    );
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $push: { requestSent: recipient._id } },
+      { new: true }
+    );
+    res.status(200).json({ user, recipient });
+  } catch (err) {
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
+
+const friendRequests = async (req, res) => {
+  try {
+    console.log("query ", req.query)
+    const userId = req.query.userId;
+    console.log("userId ", userId)
+    const userRequests = await User.findById(userId);
+    console.log(userRequests);
+    const { requestRec, requestSent } = userRequests;
+    res.status(200).json({ requestRec, requestSent });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
+
+module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName, newSource, inviteFriend, friendRequests };
+
