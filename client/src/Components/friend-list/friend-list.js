@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styles from './friend-list.module.css';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -32,18 +32,18 @@ const FriendList = () => {
     const fetchSources = async () => {
       const sources = currentUser.sources;
       if (sources) {
-      const sourceNamesArray = await Promise.all(
-        sources.map(async (source) => {
-          const sourceName = await userService.getSourceName(source);
-          return { id: source, name: sourceName.name, source: sourceName.type };
-        })
-      );
-      setOptions(sourceNamesArray);
-      setFetchSourcesComplete(true);
-    } else {
-      console.log('No sources found')
+        const sourceNamesArray = await Promise.all(
+          sources.map(async (source) => {
+            const sourceName = await userService.getSourceName(source);
+            return { id: source, name: sourceName.name, source: sourceName.type };
+          })
+        );
+        setOptions(sourceNamesArray);
+        setFetchSourcesComplete(true);
+      } else {
+        console.log('No sources found')
+      }
     }
-  }
     fetchSources();
   }, [fetchSourcesComplete]);
 
@@ -99,62 +99,66 @@ const FriendList = () => {
   }
 
   return (
-    <TableContainer component={Paper} className={styles.RecList}>
-      <Table sx={{ minWidth: 200 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={6} align="center">
-              <Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}>
-                Friends and Sources Stats
-              </Box>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="center">Source</TableCell>
-            <TableCell align="center">Type</TableCell>
-            <TableCell align="center">Recs</TableCell>
-            <TableCell align="center">Ratings</TableCell>
-            <TableCell align="center">Total</TableCell>
-            <TableCell align="center">Average</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.keys(stats)
-            .sort()
-            .flatMap((source) =>
-              Object.keys(stats[source]).map((type) => (
-                <TableRow key={`${source}-${type}`}>
-                  <TableCell component="th" scope="row" align="center">
-                    {getSourceName(source).charAt(0).toUpperCase() +
-                      getSourceName(source).slice(1)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {type === "tv"
-                      ? "TV"
-                      : type.charAt(0).toUpperCase() + type.slice(1)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {stats[source][type].totalRecs}
-                  </TableCell>
-                  <TableCell align="center">
-                    {stats[source][type].totalRatings}
-                  </TableCell>
-                  <TableCell align="center">
-                    {stats[source][type].totalScore}
-                  </TableCell>
-                  <TableCell align="center">
-                    {stats[source][type].averageScore === 0
-                      ? '-'
-                      : stats[source][type].averageScore}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-        </TableBody>
-
-      </Table>
-    </TableContainer>
-
+    <div>
+      <Button variant="contained">Requests ()</Button>
+      <Button variant="contained">Invite Friend</Button>
+      <div>
+        <TableContainer component={Paper} className={styles.RecList}>
+          <Table sx={{ minWidth: 200 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  <Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}>
+                    Friends and Sources Stats
+                  </Box>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell align="center">Source</TableCell>
+                <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Recs</TableCell>
+                <TableCell align="center">Ratings</TableCell>
+                <TableCell align="center">Total</TableCell>
+                <TableCell align="center">Average</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.keys(stats)
+                .sort()
+                .flatMap((source) =>
+                  Object.keys(stats[source]).map((type) => (
+                    <TableRow key={`${source}-${type}`}>
+                      <TableCell component="th" scope="row" align="center">
+                        {getSourceName(source).charAt(0).toUpperCase() +
+                          getSourceName(source).slice(1)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {type === "tv"
+                          ? "TV"
+                          : type.charAt(0).toUpperCase() + type.slice(1)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {stats[source][type].totalRecs}
+                      </TableCell>
+                      <TableCell align="center">
+                        {stats[source][type].totalRatings}
+                      </TableCell>
+                      <TableCell align="center">
+                        {stats[source][type].totalScore}
+                      </TableCell>
+                      <TableCell align="center">
+                        {stats[source][type].averageScore === 0
+                          ? '-'
+                          : stats[source][type].averageScore}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
   );
 }
 

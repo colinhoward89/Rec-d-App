@@ -23,6 +23,7 @@ import Box from '@mui/material/Box';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 import CasinoIcon from '@mui/icons-material/Casino';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { Context } from '../../Context';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -144,6 +145,11 @@ function RecList() {
                   ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }}/>}
                 </TableCell>
                 <TableCell><Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
+                  {rec.urgent && (
+                  <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                  <PriorityHighIcon />
+                  </Item>
+                  )}
                   <Item>
                     {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
                     {rec.type === 'movie' && <MovieIcon fontSize="" />}

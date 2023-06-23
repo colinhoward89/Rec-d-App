@@ -27,6 +27,15 @@ const Item = styled(Paper)(({ theme }) => ({
   color: 'black',
 }));
 
+const StyledRating = styled(Rating)({
+  iconFilled: {
+    color: 'currentColor',
+  },
+  iconEmpty: {
+    opacity: 0.55,
+  },
+});
+
 function RatingList() {
   const { currentUser } = useContext(Context);
   const userId = currentUser.id;
@@ -140,11 +149,14 @@ function RatingList() {
                 </TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center">
-                    <Rating
+                  {typeof rec.rating === 'number' ? (
+                    <StyledRating
                       value={rec.rating}
                       precision={0.5}
-                      emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                      emptyIcon={<StarIcon fontSize="inherit" />}
+                      readOnly
                     />
+                  ) : null}
                     {rec.ratingComment && (
                       <p>
                         <span className="tooltip">
