@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './recs-sent-list.module.css';
 import recService from './../../Services/RecService';
@@ -14,12 +14,13 @@ import StarIcon from '@mui/icons-material/Star';
 import SendRecFormDialog from '../rec-send/rec-send';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import userService from '../../Services/UserService';
+import * as userService from '../../Services/UserService';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import MovieIcon from '@mui/icons-material/Movie';
 import TvIcon from '@mui/icons-material/Tv';
 import BookIcon from '@mui/icons-material/Book';
 import Box from '@mui/material/Box';
+import { Context } from '../../Context';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -29,7 +30,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function RecSentList() {
-  const { userId } = useParams();
+  const { currentUser } = useContext(Context)
+  const userId = currentUser.id;
   const [recs, setRecs] = useState([]);
   const [sendRecSeen, setSendRecSeen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -43,9 +45,8 @@ function RecSentList() {
 
   useEffect(() => {
     const fetchSources = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const to = user.sources;
+      const to = currentUser.sources;
+      if (to) {
         const toNamesArray = await Promise.all(
           to.map(async (to) => {
             const toName = await userService.getSourceName(to);

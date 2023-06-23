@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, {useContext} from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -24,6 +23,8 @@ import TvIcon from '@mui/icons-material/Tv';
 import BookIcon from '@mui/icons-material/Book';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 import CasinoIcon from '@mui/icons-material/Casino';
+import { NavLink, useNavigate } from "react-router-dom";
+import { Context } from '../../Context';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,11 +67,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar(handleShowRated) {
+  const { currentUser } = useContext(Context)
+  const userId = currentUser.id;
   const [typeEl, setTypeEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('music');
-  const userId = localStorage.getItem('userId');
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const navigateTo = (url, state) => {
+    navigate(url, state);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -102,14 +107,12 @@ export default function PrimarySearchAppBar(handleShowRated) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    navigate(`/${encodeURIComponent(searchType)}/search/${encodeURIComponent(searchQuery)}`, {
-      state: {
-        searchType: searchType,
-        searchQuery: searchQuery
-      }
-    });
-    setSearchQuery('');
+    const url = `/${encodeURIComponent(searchType)}/search/${encodeURIComponent(searchQuery)}`;
+    const state = {
+      searchType: searchType,
+      searchQuery: searchQuery
+    };
+    navigateTo(url, state);
   };
 
   const handleKeyPress = (e) => {
@@ -174,85 +177,79 @@ export default function PrimarySearchAppBar(handleShowRated) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          color="inherit"
-          onClick={() => {
-            navigate(`/user/${userId}/profile`);
-          }}
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="friends"
-          color="inherit"
-          onClick={() => {
-            navigate(`/user/${userId}/friends`);
-          }}
-        >
-          <Diversity1Icon />
-        </IconButton>
-        <p>Friends</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="my-recs"
-          color="inherit"
-          onClick={() => {
-            navigate(`/user/${userId}/recs`);
-          }}
-        >
-          <CallReceivedIcon />
-        </IconButton>
-        <p>My Recs</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="medium"
-          aria-label="my-ratings"
-          color="inherit"
-          onClick={() => {
-            navigate(`/user/${userId}/ratings`);
-          }}
-        >
-          <StarIcon />
-        </IconButton>
-        <p>My Ratings</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="sent-recs"
-          color="inherit"
-          onClick={() => {
-            navigate(`/user/${userId}/sentrecs`);
-          }}
-        >
-          <ForwardIcon />
-        </IconButton>
-        <p>Sent Recs</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="logout"
-          color="inherit"
-          onClick={() => {
-            navigate(`/logout`);
-          }}
-        >
-          <LogoutIcon />
-        </IconButton>
-        <p>Logout</p>
-      </MenuItem>
+      <NavLink to={`/user/${userId}/profile`}>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            style={{color:'white'}}
+          >
+            <AccountCircle />
+          </IconButton>
+          <p>Profile</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to='/friends'>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="friends"
+            style={{color:'white'}}
+          >
+            <Diversity1Icon />
+          </IconButton>
+          <p>Friends</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to='/recs'>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="my-recs"
+            style={{color:'white'}}
+          >
+            <CallReceivedIcon />
+          </IconButton>
+          <p>My Recs</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to={`/user/${userId}/ratings`}>
+        <MenuItem>
+          <IconButton
+            size="medium"
+            aria-label="my-ratings"
+            style={{color:'white'}}
+          >
+            <StarIcon />
+          </IconButton>
+          <p>My Ratings</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to={`/user/${userId}/sentrecs`}>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="sent-recs"
+            style={{color:'white'}}
+          >
+            <ForwardIcon />
+          </IconButton>
+          <p>Sent Recs</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to='/logout'>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="logout"
+            style={{color:'white'}}
+          >
+            <LogoutIcon />
+          </IconButton>
+          <p>Logout</p>
+        </MenuItem>
+      </NavLink>
     </Menu>
   );
 
@@ -283,7 +280,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
               size="large"
               edge="start"
               aria-label="type"
-              color="inherit"
+              style={{color:'white'}}
               onClick={handleTypeClick}
             >
               {searchType === 'music' ? <MusicNoteIcon /> : searchType === 'movie' ? <MovieIcon /> : searchType === 'tv' ? <TvIcon /> : searchType === 'book' ? <BookIcon /> : searchType === 'video' ? <VideogameAssetIcon /> : <CasinoIcon />}
@@ -304,68 +301,62 @@ export default function PrimarySearchAppBar(handleShowRated) {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              style={{ marginRight: '0' }}
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              color="inherit"
-              onClick={() => {
-                navigate(`/user/${userId}/profile`);
-              }}
-            >
-              <AccountCircle />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="friends"
-              color="inherit"
-              onClick={() => {
-                navigate(`/user/${userId}/friends`);
-              }}
-            >
-              <Diversity1Icon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="my-recs"
-              color="inherit"
-              onClick={() => navigate(`/user/${userId}/recs`)}
-            >
-              <CallReceivedIcon />
-            </IconButton>
-            <IconButton
-              size="medium"
-              aria-label="my-ratings"
-              color="inherit"
-              onClick={() => {
-                navigate(`/user/${userId}/ratings`);
-              }}
-            >
-              <StarIcon />
-            </IconButton>
-            <IconButton
-              style={{ marginLeft: '5px' }}
-              size="medium"
-              aria-label="sent-recs"
-              color="inherit"
-              onClick={() => {
-                navigate(`/user/${userId}/sentrecs`);
-              }}
-            >
-              <ForwardIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="logout"
-              color="inherit"
-              onClick={() => {
-                navigate(`/logout`);
-              }}
-            >
-              <LogoutIcon />
-            </IconButton>
+            <NavLink to="/profile">
+              <IconButton
+                style={{ marginRight: '0', color:'white'}}
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+              >
+                <AccountCircle />
+              </IconButton>
+            </NavLink>
+            <NavLink to='/friends'>
+              <IconButton
+                size="large"
+                aria-label="friends"
+                style={{color:'white'}}
+              >
+                <Diversity1Icon />
+              </IconButton>
+            </NavLink>
+            <NavLink to='/recs'>
+              <IconButton
+                size="large"
+                aria-label="my-recs"
+                style={{color:'white'}}
+              >
+                <CallReceivedIcon />
+              </IconButton>
+            </NavLink>
+            <NavLink to={`/user/${userId}/ratings`}>
+              <IconButton
+                size="medium"
+                aria-label="my-ratings"
+                style={{ marginTop: '3px', color:'white'}}
+              >
+                <StarIcon />
+              </IconButton>
+            </NavLink>
+            <NavLink to={`/user/${userId}/sentrecs`}>
+              <IconButton
+                style={{ marginLeft: '5px', marginTop: '3px', color:'white'}}
+                size="medium"
+                aria-label="sent-recs"
+              >
+                <ForwardIcon />
+              </IconButton>
+            </NavLink>
+            <NavLink to='/logout'>
+              <IconButton
+                size="large"
+                aria-label="logout"
+                style={{color:'white'}}
+              >
+                <LogoutIcon />
+              </IconButton>
+            </NavLink>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

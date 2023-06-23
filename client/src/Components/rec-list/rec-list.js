@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './rec-list.module.css';
 import recService from './../../Services/RecService';
@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import RatingFormDialog from '../rating-add/rating-add';
 import SendRecFormDialog from '../rec-send/rec-send';
-import userService from '../../Services/UserService';
+import * as userService from '../../Services/UserService';
 import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
@@ -20,6 +20,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import TvIcon from '@mui/icons-material/Tv';
 import BookIcon from '@mui/icons-material/Book';
 import Box from '@mui/material/Box';
+import { Context } from '../../Context';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -29,7 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function RecList() {
-  const { userId } = useParams();
+  const {currentUser} = useContext(Context)
   const [recs, setRecs] = useState([]);
   const [ratingSeen, setRatingSeen] = useState(false);
   const [recSeen, setRecSeen] = useState(false);
@@ -38,15 +39,14 @@ function RecList() {
   const [selectedRec, setSelectedRec] = useState(null);
 
   useEffect(() => {
-    getUserRecommendations(userId)
+    getUserRecommendations(currentUser.id)
       .catch((e) => console.log(e));
-  }, [userId]);
+  }, [currentUser.id]);
 
   useEffect(() => {
     const fetchSources = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;
+      const sources = currentUser.sources;
+      if (sources) {
         const sourceNamesArray = await Promise.all(
           sources.map(async (source) => {
             const sourceName = await userService.getSourceName(source);

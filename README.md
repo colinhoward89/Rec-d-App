@@ -15,6 +15,8 @@ Before moving ahead, you will need to create a [Spotify](https://developer.spoti
 
 You will also need to create an account with [OMDB](https://www.omdbapi.com) and retrieve a free API key.
 
+You will also need to create an account with [IGDB](https://www.igdb.com) and retrieve a free API key.
+
 In the `/server` folder, create a file called '.env':
 
 ```bash
@@ -30,6 +32,10 @@ MUSIC_API_SECRET="xxx"
 
 // OMDB API key:
 OMDB_API_KEY="xxx"
+
+// IGDB API key:
+IGDB_CLIENT_ID='xxx'
+IGDB_ACCESS_TOKEN='xxx'
 ```
 
 ## Running the app
@@ -54,7 +60,7 @@ cd client
 npm i
 ```
 
-Once this is done, run `npm start` to run the scripts and connect the front end. Once all of the above steps are taken, open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Once this is done, run `npx nodemon` to run the scripts and connect the front end. Once all of the above steps are taken, open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ### Tech Stack
 

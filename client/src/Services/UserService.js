@@ -1,8 +1,6 @@
 const BASE_URL = 'http://localhost:3001';
 
-const userService = {};
-
-userService.register = (user) => {
+export const register = (user) => {
   return fetch(`${BASE_URL}/register`, {
     method: 'POST',
     credentials: 'include',
@@ -14,7 +12,7 @@ userService.register = (user) => {
     .catch((err) => console.log(err));
 };
 
-userService.login = (user) => {
+export const login = (user) => {
   return fetch(`${BASE_URL}/login`, {
     method: 'POST',
     credentials: 'include',
@@ -26,8 +24,19 @@ userService.login = (user) => {
     .catch((err) => console.log(err));
 };
 
-userService.getUserInfo = () => {
-  return fetch(`${BASE_URL}/user/info`, {
+export const getUser = (email) => {
+  return fetch(`${BASE_URL}/user/${email}`, {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
+export const getUserInfo = (id) => {
+  return fetch(`${BASE_URL}/user/${id}`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
@@ -48,7 +57,7 @@ userService.getUserInfo = () => {
 //     .catch((err) => console.log(err));
 // };
 
-userService.getSourceName = (source) => {
+export const getSourceName = (source) => {
   return fetch(`${BASE_URL}/username/${source}`, {
     method: 'GET',
     credentials: 'include',
@@ -58,8 +67,7 @@ userService.getSourceName = (source) => {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
-
-userService.logout = () => {
+export const logout = () => {
   return fetch(`${BASE_URL}/logout`, {
     method: 'POST',
     credentials: 'include',
@@ -69,5 +77,3 @@ userService.logout = () => {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
-
-export default userService;

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './landing-page.module.css';
 import Login from './../login/login';
-import Register from '../register/register';
 import { Button } from '@mui/material';
 
-const LandingPage = ({ setIsAuthenticated }) => {
+const LandingPage = () => {
   const [currentTab, setCurrentTab] = useState('login');
   const [text, setText] = useState(['band', 'music', 'Listen to'])
 
@@ -41,22 +40,8 @@ const LandingPage = ({ setIsAuthenticated }) => {
       <p>embedded YouTube video</p> */}
       <h1>What are you waiting for? Get Rec'd today!</h1>
       <div className={styles.LandingPage}>
-        {currentTab === 'login' ? <Login setIsAuthenticated={setIsAuthenticated} /> : <Register setIsAuthenticated={setIsAuthenticated} />}
+        <Login />
       </div>
-      <div className={styles.TabContainer}>
-          <Button variant="contained"
-            className={currentTab === 'login' ? styles.ActiveTab : ''}
-            onClick={() => handleTabChange('login')}
-          >
-            Login
-          </Button>
-          <Button variant="contained"
-            className={currentTab === 'register' ? styles.ActiveTab : ''}
-            onClick={() => handleTabChange('register')}
-          >
-            Register
-          </Button>
-        </div>
     </div>
   );
 }

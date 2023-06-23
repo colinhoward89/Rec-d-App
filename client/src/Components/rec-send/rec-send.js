@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,21 +8,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import recService from './../../Services/RecService';
-import userService from '../../Services/UserService';
+import * as userService from '../../Services/UserService';
 import { Autocomplete } from '@mui/material';
+import { Context } from '../../Context';
 
 export default function SendRecFormDialog({ rec }) {
+  const { currentUser } = useContext(Context)
+  const userId = currentUser.id;
   const [open, setOpen] = React.useState(true);
   const [sourceComment, setSourceComment] = React.useState('');
   const [recipient, setRecipient] = useState(null);
   const [options, setOptions] = useState([]);
-  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchRecipients = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;        
+      const sources = currentUser.sources;
+      if (sources) {      
         const sourceNamesArray = await Promise.all(sources.map(async (source) => {
           const sourceName = await userService.getSourceName(source);
           return { id: source, name: sourceName.name, type: sourceName.type };

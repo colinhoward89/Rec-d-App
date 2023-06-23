@@ -1,55 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { Context } from "./Context";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './Components/nav-bar/nav-bar';
 import LandingPage from './Components/landing-page/landing-page';
-import Login from './Components/login/login';
-import Register from './Components/register/register';
 import Profile from './Components/profile/profile';
 import RecList from './Components/rec-list/rec-list';
 import RatingList from './Components/rating-list/rating-list';
 import RecSentList from './Components/recs-sent-list/recs-sent-list';
 import FriendList from './Components/friend-list/friend-list';
-import auth from './utils/auth';
+import { AuthenticationGuard } from './utils/AuthenticationGuard';
 import SearchList from './Components/search-list/search-list';
 import Logout from './Components/logout/logout';
+import FirstVisit from './Components/firstvisit/firstvisit';
 
 function App() {
-  const initialState = auth.isAuthenticated();
-  const [isAuthenticated, setIsAuthenticated] = useState(initialState);
+  const { currentUser, isAuthenticated, isLoading, handleGetUser } = useContext(
+    Context
+  )
+  console.log(isAuthenticated)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      handleGetUser();
+    }
+  }, [isAuthenticated]);
+
 
   return (
-    <div className="App">
-      <Router>
-        <Navbar isAuthenticated={isAuthenticated} />
-        <Routes>
-          <Route path="/" element={<LandingPage setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/register" element={<Register />} />
-          {isAuthenticated && (
-            <Route path="/user/:userId/profile" element={<Profile />} />
-          )}
-          {isAuthenticated && (
-            <Route path="/user/:userId/recs" element={<RecList />} />
-          )}
-          {isAuthenticated && (
-            <Route path="/:searchtype/search/:query" element={<SearchList setIsAuthenticated={setIsAuthenticated} />} />
-          )}
-          {isAuthenticated && (
-            <Route path="/user/:userId/ratings" element={<RatingList />} />
-          )}
-            {isAuthenticated && (
-            <Route path="/user/:userId/sentrecs" element={<RecSentList />} />
-          )}
-            {isAuthenticated && (
-            <Route path="/user/:userId/friends" element={<FriendList />} />
-          )}
-          {isAuthenticated && (
-            <Route path="/logout" element={<Logout />} />
-          )}
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        {isLoading ? (
+          <div className="mt-96">Loading...</div>
+        ) : !isAuthenticated ? (
+          <LandingPage />
+        ) : !currentUser || currentUser.name === '' ? (
+          <FirstVisit />
+        ) : (
+          <Routes>
+            <Route path="/" element={<AuthenticationGuard component={LandingPage} />} />
+            <Route path="/home" element={<AuthenticationGuard component={Profile} />} />
+            <Route path="/profile" element={<AuthenticationGuard component={Profile} />} />
+            <Route path="/user/:userId/profile" element={<AuthenticationGuard component={Profile} />} />
+            <Route path="/recs" element={<AuthenticationGuard component={RecList} />} />
+            <Route path="/:searchtype/search/:query" element={<AuthenticationGuard component={SearchList} />} />
+            <Route path="/user/:userId/ratings" element={<AuthenticationGuard component={RatingList} />} />
+            <Route path="/user/:userId/sentrecs" element={<AuthenticationGuard component={RecSentList} />} />
+            <Route path="/friends" element={<AuthenticationGuard component={FriendList} />} />
+            <Route path="/logout" element={<AuthenticationGuard component={Logout} />} />
+          </Routes>
+        )}
+      </div>
+    </Router>
   );
 }
 

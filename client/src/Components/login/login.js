@@ -1,73 +1,21 @@
-import React, { useState } from 'react';
-import auth from './../../utils/auth';
-import userService from './../../Services/UserService';
-import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from '@mui/material';
+import { Context } from '../../Context';
+import React, { useContext } from 'react';;
 
-const initialState = {
-  email: '',
-  password: '',
-};
+const Login = () => {
+  const { loginWithRedirect } = useAuth0();
+  const { isAuthenticated, handleGetUser } = useContext(Context);
 
-const Login = (props) => {
-
-  let navigate = useNavigate();
-  const [state, setState] = useState(initialState);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleLogin = async () => {
+    await loginWithRedirect({
+      appState: {
+        returnTo: "/home",
+      },
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { email, password } = state;
-    const user = { email, password };
-    const res = await userService.login(user);
-    if (res.error) {
-      alert(`${res.message}`);
-      setState(initialState);
-    } else {
-      // Get user info to extract the user ID
-      const userInfo = await userService.getUserInfo();
-      const userId = userInfo._id;
-      // This sets isAuthenticated = true and redirects to profile
-      props.setIsAuthenticated(true);
-      localStorage.setItem('userId', userId);
-      auth.login(() => navigate(`/user/${userId}/recs`));
-    }
-  };
-
-  const validateForm = () => {
-    return !state.email || !state.password;
-  };
-
-  return (
-    <section>
-      <form className="form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="name@mail.com"
-          name="email"
-          value={state.email}
-          onChange={handleChange}
-          autoComplete="off"
-        />
-        <input
-          type="password"
-          placeholder="******"
-          name="password"
-          value={state.password}
-          onChange={handleChange}
-        />
-        <Button variant="outlined" className="form-submit" type="submit" disabled={validateForm()}>
-          &nbsp;Login&nbsp;
-        </Button>
-      </form>
-    </section>
-  );
+  return <Button variant="outlined" className="form-submit" onClick={() => handleLogin()}>Log In</Button>;
 };
 
 export default Login;

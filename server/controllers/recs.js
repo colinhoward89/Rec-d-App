@@ -3,8 +3,9 @@ const { ObjectId } = require('mongodb');
 
 const getRecs = async (req, res) => {
   try {
-    const to = req.params.userId;
-    const userRecs = await recs.find({ to });
+    const {userId} = req.query;
+    const userRecs = await recs.find({ to: userId });
+    console.log(userRecs)
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);

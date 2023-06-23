@@ -1,35 +1,31 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import recService from './../../Services/RecService';
-import userService from '../../Services/UserService';
+import * as userService from '../../Services/UserService';
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Context } from '../../Context';
 
 export default function RecFormDialog({ rec }) {
-  const [urgent, setUrgent] = React.useState(false);
-  const [open, setOpen] = React.useState(true);
-  const [sourceComment, setSourceComment] = React.useState('');
+  const {currentUser} = useContext(Context);
+  const userId = currentUser.id;
+  const [urgent, setUrgent] = useState(false);
+  const [open, setOpen] = useState(true);
+  const [sourceComment, setSourceComment] = useState('');
   const [source, setSource] = useState(null);
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
-  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchSources = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;
+        const sources = currentUser.sources;
         const sourceNamesArray = await Promise.all(
           sources.map(async (source) => {
             const sourceName = await userService.getSourceName(source);
             return { id: source, name: sourceName.name, type: sourceName.type };
-          })
-        );
+          }))
         const otherSources = sourceNamesArray.filter((source) => source.type === 'source');
         setOptions(otherSources);
         setFetchSourcesComplete(true);
-      } else {
-        console.log('No user info found 😞');
-      }
     };
     fetchSources();
   }, [fetchSourcesComplete]);

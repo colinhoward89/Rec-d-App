@@ -3,7 +3,8 @@ const BASE_URL = 'http://localhost:3001';
 const recService = {};
 
 recService.getUserRecs = (userId) => {
-  return fetch(`${BASE_URL}/user/${userId}/recs`, {
+  const queryString = `userId=${userId}`;
+  return fetch(`${BASE_URL}/recs?${queryString}`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',

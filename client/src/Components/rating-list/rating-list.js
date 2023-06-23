@@ -1,28 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './rating-list.module.css';
 import recService from './../../Services/RecService';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Rating, } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import RatingFormDialog from '../rating-add/rating-add';
-import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import SendRecFormDialog from '../rec-send/rec-send';
-import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import userService from '../../Services/UserService';
+import * as userService from '../../Services/UserService';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import MovieIcon from '@mui/icons-material/Movie';
 import TvIcon from '@mui/icons-material/Tv';
 import BookIcon from '@mui/icons-material/Book';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import CasinoIcon from '@mui/icons-material/Casino';
 import Box from '@mui/material/Box';
+import { Context } from '../../Context';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -32,7 +27,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function RatingList() {
-  const { userId } = useParams();
+  const { currentUser } = useContext(Context);
+  const userId = currentUser.id;
   const [recs, setRecs] = useState([]);
   const [ratingSeen, setRatingSeen] = useState(false);
   const [sendRecSeen, setSendRecSeen] = useState(false);
@@ -43,24 +39,19 @@ function RatingList() {
   useEffect(() => {
     getUserRecommendations(userId)
       .catch((e) => console.log(e));
-  }, [userId]);
+  }, [userId, ratingSeen, sendRecSeen]);
 
   useEffect(() => {
     const fetchSources = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;
-        const sourceNamesArray = await Promise.all(
-          sources.map(async (source) => {
-            const sourceName = await userService.getSourceName(source);
-            return { id: source, name: sourceName.name };
-          })
-        );
-        setOptions(sourceNamesArray);
-        setFetchSourcesComplete(true);
-      } else {
-        console.log('No user info found 😞');
-      }
+      const sources = currentUser.sources;
+      const sourceNamesArray = await Promise.all(
+        sources.map(async (source) => {
+          const sourceName = await userService.getSourceName(source);
+          return { id: source, name: sourceName.name };
+        })
+      );
+      setOptions(sourceNamesArray);
+      setFetchSourcesComplete(true);
     };
     fetchSources();
   }, [fetchSourcesComplete]);
@@ -92,7 +83,7 @@ function RatingList() {
         <Table sx={{ minWidth: 200 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-            <TableCell colSpan={3} align="center" ><Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2'}}>My Ratings</Box></TableCell>
+              <TableCell colSpan={3} align="center" ><Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}>My Ratings</Box></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -115,9 +106,11 @@ function RatingList() {
                   <Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
                     <Item>
                       {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
-                      {rec.type === 'movie' && <MovieIcon fontSize=""/>}
-                      {rec.type === 'tv' && <TvIcon fontSize=""/>}
-                      {rec.type === 'book' && <BookIcon fontSize=""/>}
+                      {rec.type === 'movie' && <MovieIcon fontSize="" />}
+                      {rec.type === 'tv' && <TvIcon fontSize="" />}
+                      {rec.type === 'book' && <BookIcon fontSize="" />}
+                      {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
+                      {rec.type === 'board' && <CasinoIcon fontSize="" />}
                     </Item>
                     <Item>{rec.title}</Item>
                     <Item>{rec.author}</Item>

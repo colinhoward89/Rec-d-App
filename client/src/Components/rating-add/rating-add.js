@@ -1,19 +1,10 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { useState, useEffect, useContext } from 'react';
 import recService from './../../Services/RecService';
-import userService from '../../Services/UserService';
-import { Autocomplete } from '@mui/material';
-import Rating from '@mui/material/Rating';
+import * as userService from '../../Services/UserService';
+import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, TextField, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { Context } from '../../Context';
 
 const labels = {
   0.5: 'Awful',
@@ -29,6 +20,8 @@ const labels = {
 };
 
 export default function RatingFormDialog({ rec }) {
+  const {currentUser} = useContext(Context)
+  const userId = currentUser.id;
   const [open, setOpen] = React.useState(true);
   const [ratingComment, setRatingComment] = React.useState('');
   const [source, setSource] = useState(null);
@@ -36,14 +29,12 @@ export default function RatingFormDialog({ rec }) {
   const [existingRecId, setExistingRecId] = useState(null);
   const [options, setOptions] = useState([]);
   const [recExists, setRecExists] = useState(false);
-  const userId = localStorage.getItem('userId');
   const [fetchRecipientsComplete, setFetchRecipientsComplete] = useState(false);
 
   useEffect(() => {
     const fetchRecipients = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;
+      const sources = currentUser.sources;
+      if (sources) {
         const sourceNamesArray = await Promise.all(
           sources.map(async (source) => {
             const sourceName = await userService.getSourceName(source);
@@ -54,7 +45,7 @@ export default function RatingFormDialog({ rec }) {
         setOptions(otherSources);
         setFetchRecipientsComplete(true);
       } else {
-        console.log('No user info found 😞');
+        console.log('No user sources found 😞');
       }
     };
     fetchRecipients();

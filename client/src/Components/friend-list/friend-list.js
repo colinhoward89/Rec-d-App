@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from './friend-list.module.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import userService from './../../Services/UserService';
+import * as userService from './../../Services/UserService';
 import recService from '../../Services/RecService';
-
-const initialState = {
-  name: '',
-  sources: ''
-};
+import { Context } from '../../Context';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -20,15 +16,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const FriendList = () => {
+  const { currentUser } = useContext(Context)
+  const userId = currentUser.id;
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
-  const [state, setState] = useState(initialState);
-  console.log(state)
   const [stats, setStats] = useState({});
   const [recs, setRecs] = useState([]);
-  const userId = localStorage.getItem('userId');
-  const name = state.name || 'Missing';
-  const sources = state.sources || 'Missing';
 
   useEffect(() => {
     getUserRecommendations(userId)
@@ -37,24 +30,22 @@ const FriendList = () => {
 
   useEffect(() => {
     const fetchSources = async () => {
-      const user = await userService.getUserInfo();
-      if (user) {
-        const sources = user.sources;
-        const sourceNamesArray = await Promise.all(
-          sources.map(async (source) => {
-            const sourceName = await userService.getSourceName(source);
-            return { id: source, name: sourceName.name, source: sourceName.type };
-          })
-        );
-        setOptions(sourceNamesArray);
-        setFetchSourcesComplete(true);
-      } else {
-        console.log('No user info found 😞');
-      }
-    };
+      const sources = currentUser.sources;
+      if (sources) {
+      const sourceNamesArray = await Promise.all(
+        sources.map(async (source) => {
+          const sourceName = await userService.getSourceName(source);
+          return { id: source, name: sourceName.name, source: sourceName.type };
+        })
+      );
+      setOptions(sourceNamesArray);
+      setFetchSourcesComplete(true);
+    } else {
+      console.log('No sources found')
+    }
+  }
     fetchSources();
   }, [fetchSourcesComplete]);
-
 
   function getSourceName(sourceId) {
     const option = options.find(option => option.id === sourceId);
@@ -86,7 +77,6 @@ const FriendList = () => {
     return statsBySourceAndType;
   }
 
-
   function getUserRecommendations(userId) {
     return recService.getUserRecs(userId)
       .then((recs) => {
@@ -95,7 +85,7 @@ const FriendList = () => {
           const ratings = recs.filter((r) => r.source === rec.source && r.type === rec.type && typeof r.rating === 'number' && !isNaN(r.rating)).map((r) => r.rating);
           if (ratings.length > 0) {
             const avgRating = ratings.reduce((acc, val) => acc + val) / ratings.length;
-            return { ...rec, avgRating }; // Create new object with updated field
+            return { ...rec, avgRating };
           } else {
             return { ...rec, avgRating: 0 };
           }
@@ -103,9 +93,7 @@ const FriendList = () => {
         updatedRecs.sort((a, b) => b.avgRating - a.avgRating);
         setRecs(updatedRecs);
         const statsBySourceAndType = getRecommendationStats(updatedRecs);
-        setStats(statsBySourceAndType); // Output the stats object
-        console.log(stats)
-
+        setStats(statsBySourceAndType);
         return updatedRecs;
       });
   }

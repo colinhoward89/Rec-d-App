@@ -36,7 +36,6 @@ function SearchList() {
   const [recSeen, setRecSeen] = useState(false);
   const [sendRecSeen, setSendRecSeen] = useState(false);
   const [ratingSeen, setRatingSeen] = useState(false);
-  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     if (searchtype === 'music') {

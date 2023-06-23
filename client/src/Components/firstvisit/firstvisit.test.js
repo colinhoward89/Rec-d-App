@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Register from './Register';
+import Firstvisit from './Firstvisit';
 
 it('It should mount', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Register />, div);
+  ReactDOM.render(<Firstvisit />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

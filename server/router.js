@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const userController = require('./controllers/user');
 const recsController = require('./controllers/recs');
-const authMiddleware = require('./middlewares/auth');
 const spotifyApi = require('./controllers/music-search');
 const omdb = require('./controllers/movie-search');
 const tvmaze = require('./controllers/tv-search');
@@ -11,17 +10,18 @@ const videoGameSearch = require('./controllers/videogame-search');
 
 router.post('/register', userController.create);
 router.post('/login', userController.login);
-router.get('/user/info', authMiddleware, userController.profile);
-router.get('/user/:userId/profile', authMiddleware, userController.profile);
-router.post('/logout', authMiddleware, userController.logout);
+router.get('/user/:email', userController.getUser);
+router.get('/user/:id', userController.getUserInfo);
+router.get('/user/:userId/profile', userController.profile);
+// router.post('/logout', userController.logout);
 router.get('/user/:source', userController.getSources);
 router.get('/username/:source', userController.getSourceName);
 
-router.get('/user/:userId/recs', authMiddleware, recsController.getRecs);
-router.get('/user/:userId/sentrecs', authMiddleware, recsController.getSentRecs);
-router.post('/user/:userId/recs', authMiddleware, recsController.saveRec);
-router.post('/user/:userId/rating', authMiddleware, recsController.saveRating);
-router.put('/user/:userId/recs', authMiddleware, recsController.updateRec);
+router.get('/recs', recsController.getRecs);
+router.get('/user/:userId/sentrecs', recsController.getSentRecs);
+router.post('/user/:userId/recs', recsController.saveRec);
+router.post('/user/:userId/rating', recsController.saveRating);
+router.put('/user/:userId/recs', recsController.updateRec);
 
 router.get('/music/search/:query', async (req, res) => {
   const query = req.params.query;
