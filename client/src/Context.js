@@ -12,7 +12,9 @@ const ContextProvider = ({ children }) => {
     type: '',
     sources: '',
     id: '',
-  });
+    requestSent: '',
+    requestRec: '',
+    });
 
   const handleGetUser = async () => {
     console.log("being called")
@@ -27,6 +29,8 @@ const ContextProvider = ({ children }) => {
           type: receivedUser[0].type,
           sources: receivedUser[0].sources,
           id: receivedUser[0]._id,
+          requestSent: receivedUser[0].requestSent,
+          requestRec: receivedUser[0].requestRec,
         });
       } else {
         setCurrentUser(null); // Set currentUser to null if receivedUser is not found

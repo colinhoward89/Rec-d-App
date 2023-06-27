@@ -47,8 +47,9 @@ const getUser = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    const email = req.params.id;
+    const id = req.params.id;
     const existingUser = await User.find({ _id: id });
+    console.log(existingUser)
     if (!existingUser) {
       throw new Error('User not found');
     }

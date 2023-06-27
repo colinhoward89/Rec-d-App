@@ -11,7 +11,7 @@ const videoGameSearch = require('./controllers/videogame-search');
 router.post('/register', userController.create);
 router.post('/login', userController.login);
 router.get('/user/:email', userController.getUser);
-router.get('/user/:id', userController.getUserInfo);
+router.get('/userID/:id', userController.getUserInfo);
 router.get('/user/:userId/profile', userController.profile);
 // router.post('/logout', userController.logout);
 router.get('/user/:source', userController.getSources);

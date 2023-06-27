@@ -1,126 +1,102 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import * as userService from '../../Services/UserService';
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { Context } from '../../Context';
 
 export default function FriendRequestsFormDialog() {
   const { currentUser } = useContext(Context);
-  const userId = currentUser.id;
   const [open, setOpen] = useState(true);
-  const [currentSources, setCurrentSources] = useState([]);
-  const [requestsSent, setRequestsSent] = useState([]);
-  const [requestsRec, setRequestsRec] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sourceNamesArray, setSourceNamesArray] = useState([]);
-
-console.log(sourceNamesArray)
+  const [requestsSent, setRequestsSent] = useState({});
+  const [requestsRec, setRequestsRec] = useState({});
 
   useEffect(() => {
-    const retrieveFriendRequests = async () => {
-      try {
-        const res = await userService.friendRequests(userId);
-        if (Array.isArray(res.requestSent)) {
-          const sentRequests = res.requestSent.map((request) => request.toString());
-          setRequestsSent((prevRequestsSent) => [...prevRequestsSent, ...sentRequests]);
-        }
-        if (Array.isArray(res.requestRec)) {
-          setRequestsRec((prevRequestsRec) => [...prevRequestsRec, ...res.requestRec]);
-        }
-      } catch (error) {
-        console.log(error);
+    const fetchRequestSentNames = async () => {
+      const sourceNamesArray = [];
+      for (const id of [...currentUser.requestSent]) {
+        const sourceName = await userService.getUserInfo(id);
+        sourceNamesArray.push({
+          id,
+          name: sourceName[0].name,
+          email: sourceName[0].email,
+        });
       }
-    };
-    
-    const fetchSources = async () => {
-      const sources = currentUser.sources;
-      const sourceNamesArray = await Promise.all(
-        sources.map(async (source) => {
-          const sourceName = await userService.getUserInfo(source);
-          return {
-            id: source,
-            name: sourceName.name,
-            type: sourceName.type,
-            email: sourceName.email,
-          };
-        })
-      );
-      const otherSources = sourceNamesArray.filter((source) => source.type === 'user');
-      setCurrentSources((prevSources) => [...prevSources, ...otherSources]);
-      return sourceNamesArray;
+      setRequestsSent(sourceNamesArray);
     };
 
-    const fetchData = async () => {
-      await Promise.all([retrieveFriendRequests(), fetchSources()]);
-      setIsLoading(false);
+    const fetchRequestRecNames = async () => {
+      const sourceNamesArray = [];
+      for (const id of [...currentUser.requestRec]) {
+        const sourceName = await userService.getUserInfo(id);
+        sourceNamesArray.push({
+          id,
+          name: sourceName.name,
+          email: sourceName.email,
+        });
+      }
+      setRequestsRec(sourceNamesArray);
     };
 
-    fetchData();
-  }, [userId]);
+    fetchRequestSentNames();
+    fetchRequestRecNames();
+  }, [currentUser.requestSent, currentUser.requestRec]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleReject = () => {};
-
-  const handleAccept = () => {};
-
-  const handleDelete = () => {};
-
-  const getSourceNameById = (id) => {
-    const source = sourceNamesArray.find((source) => source.id === id);
-    return source ? source.name : '';
+  const handleReject = (request) => {
+    // Handle reject logic here
   };
 
-  const getSourceEmailById = (id) => {
-    const source = sourceNamesArray.find((source) => source.id === id);
-    return source ? source.email : '';
+  const handleAccept = (request) => {
+    // Handle accept logic here
   };
 
-  if (isLoading) {
-    // Render a loading state while data is being fetched
-    return <div>Loading...</div>;
-  }
+  const handleDelete = (request) => {
+    // Handle delete logic here
+  };
 
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Friend Requests</DialogTitle>
         <DialogContent>
-          <DialogTitle>Requests Received</DialogTitle>
+          <DialogTitle>Received</DialogTitle>
           {requestsRec.length > 0 ? (
             requestsRec.map((request) => (
-              <DialogContentText key={request._id}>
-                {getSourceNameById(request)}
-                <br />
-                {getSourceEmailById(request)}
-              </DialogContentText>
+              <div key={request.id}>
+                <DialogContentText>
+                  {request.name} <br />
+                  {request.email}
+                </DialogContentText>
+                <DialogActions>
+                  <Button onClick={() => handleReject(request)}>Reject</Button>
+                  <Button onClick={() => handleAccept(request)}>Accept</Button>
+                </DialogActions>
+              </div>
             ))
           ) : (
             <DialogContentText>No requests received</DialogContentText>
           )}
         </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleReject}>Reject</Button>
-          <Button onClick={handleAccept}>Accept</Button>
-        </DialogActions>
         <DialogContent>
-          <DialogTitle>Requests Sent</DialogTitle>
+          <DialogTitle>Sent</DialogTitle>
           {requestsSent.length > 0 ? (
             requestsSent.map((request) => (
-              <DialogContentText key={request._id}>
-                {getSourceEmailById(request)}
-              </DialogContentText>
+              <div key={request.id}>
+                <DialogContentText>
+                  {request.email}
+                </DialogContentText>
+                <DialogActions>
+                  <Button onClick={() => handleDelete(request)}>Delete</Button>
+                </DialogActions>
+              </div>
             ))
           ) : (
             <DialogContentText>No requests sent</DialogContentText>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDelete}>Delete</Button>
-        </DialogActions>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>

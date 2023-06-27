@@ -36,7 +36,7 @@ export const getUser = (email) => {
 };
 
 export const getUserInfo = (id) => {
-  return fetch(`${BASE_URL}/user/${id}`, {
+  return fetch(`${BASE_URL}/userID/${id}`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
