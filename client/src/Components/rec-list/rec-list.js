@@ -122,6 +122,9 @@ function RecList() {
 
   return (
     <>
+        {recs.length === 0 ? (
+      <p>No recommendations outstanding</p>
+    ) : (
       <TableContainer component={Paper} className={styles.RecList}>
         <Table sx={{ minWidth: 200 }} aria-label="simple table">
           <TableHead>
@@ -202,6 +205,7 @@ function RecList() {
           </TableBody>
         </Table>
       </TableContainer>
+    )}
       {ratingSeen ? <RatingFormDialog
         rec={selectedRec}
         open={ratingSeen}

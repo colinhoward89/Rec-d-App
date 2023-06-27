@@ -17,7 +17,23 @@ import { Context } from '../../Context';
 
 const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
-  const { currentUser } = useContext(Context)
+  const { currentUser, setCurrentUser } = useContext(Context);
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState(currentUser.name);
+
+  const handleEditUsername = () => {
+    setEditingUsername(true);
+  };
+
+  const handleUsernameChange = (event) => {
+    setNewUsername(event.target.value);
+  };
+
+  const handleSaveUsername = async () => {
+    await userService.editName(currentUser.id, newUsername)
+    setCurrentUser({ ...currentUser, name: newUsername });
+    setEditingUsername(false);
+  };
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -26,9 +42,25 @@ const Profile = () => {
   return (
     isAuthenticated && (
       <div>
-        <img src={user.picture} alt={user.name} />
-        <h2>{currentUser.name}</h2>
-        <p>{currentUser.email}</p>
+        {/* <img src={user.picture} alt={user.name} /> */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {editingUsername ? (
+            <>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={handleUsernameChange}
+              />
+              <Button onClick={handleSaveUsername}>Save</Button>
+            </>
+          ) : (
+            <>
+              <h2>{currentUser.name}</h2>
+              <Button onClick={handleEditUsername}>Edit Username</Button>
+            </>
+          )}
+        </div>
+        <p>Friend Requests: {currentUser.requestRec.length}</p>
       </div>
     )
   );

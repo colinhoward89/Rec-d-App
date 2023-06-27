@@ -203,6 +203,19 @@ const acceptFriendRequest = async (req, res) => {
   }
 };
 
+const editName = async (req, res) => {
+  try {
+    const { userId, name } = req.body;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name },
+      { new: true }
+    );
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
 
-module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName, newSource, inviteFriend, friendRequests, deleteFriendRequest, rejectFriendRequest, acceptFriendRequest };
+module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName, newSource, inviteFriend, friendRequests, deleteFriendRequest, rejectFriendRequest, acceptFriendRequest, editName };
 

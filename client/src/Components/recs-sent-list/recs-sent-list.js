@@ -90,6 +90,9 @@ function RecSentList() {
 
   return (
     <>
+                {recs.length === 0 ? (
+      <p>No ratings added</p>
+    ) : (
       <TableContainer component={Paper} className={styles.RecList}>
         <Table sx={{ minWidth: 200 }} aria-label="simple table">
           <TableHead>
@@ -176,6 +179,7 @@ function RecSentList() {
           </TableBody>
         </Table>
       </TableContainer>
+      )}
       {
         sendRecSeen ? <SendRecFormDialog
           rec={selectedRec}

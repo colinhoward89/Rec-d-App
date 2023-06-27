@@ -38,7 +38,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={<AuthenticationGuard component={LandingPage} />} />
-            <Route path="/home" element={<AuthenticationGuard component={Profile} />} />
+            <Route path="/home" element={<AuthenticationGuard component={RecList} />} />
             <Route path="/profile" element={<AuthenticationGuard component={Profile} />} />
             <Route path="/user/:userId/profile" element={<AuthenticationGuard component={Profile} />} />
             <Route path="/recs" element={<AuthenticationGuard component={RecList} />} />

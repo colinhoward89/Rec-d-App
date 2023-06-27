@@ -91,6 +91,9 @@ function RatingList() {
 
   return (
     <>
+            {recs.length === 0 ? (
+      <p>No ratings added</p>
+    ) : (
       <TableContainer component={Paper} className={styles.RecList}>
         <Table sx={{ minWidth: 200 }} aria-label="simple table">
           <TableHead>
@@ -180,6 +183,7 @@ function RatingList() {
           </TableBody>
         </Table>
       </TableContainer>
+    )}
       {
         ratingSeen ? <RatingFormDialog
           rec={selectedRec}

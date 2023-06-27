@@ -149,3 +149,15 @@ export const acceptFriendRequest = (userId, request) => {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
+
+export const editName = (userId, name) => {  
+  return fetch(`${BASE_URL}/editname`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, name })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};

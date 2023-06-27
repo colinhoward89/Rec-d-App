@@ -22,6 +22,7 @@ router.get('/friendrequests', userController.friendRequests);
 router.put('/deletefriendrequest', userController.deleteFriendRequest);
 router.put('/rejectfriendrequest', userController.rejectFriendRequest);
 router.put('/acceptfriendrequest', userController.acceptFriendRequest);
+router.put('/editname', userController.editName);
 
 router.get('/recs', recsController.getRecs);
 router.get('/user/:userId/sentrecs', recsController.getSentRecs);
