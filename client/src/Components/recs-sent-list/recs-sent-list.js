@@ -77,7 +77,7 @@ function RecSentList() {
   function getSentRecommendations(userId) {
     return recService.getSentRecs(userId)
       .then((recs) => {
-        let filteredRecs = recs.filter((rec) => rec.source === userId);
+        let filteredRecs = recs.filter((rec) => rec.sources.some((source) => source.source === userId));
         setRecs(filteredRecs);
         return filteredRecs;
       });
@@ -132,21 +132,26 @@ function RecSentList() {
                     <Item>{rec.author}</Item>
                     <Item>{rec.year}</Item>
                   </Stack>
-                  <p></p><Stack direction="row">
+                  <p></p>  <Stack direction="row">
                     <Item>
-                      {options.find(option => option.id === rec.to)?.name.charAt(0).toUpperCase() + options.find(option => option.id === rec.to)?.name.slice(1)}
+                      {options.find((option) => option.id === rec.to)?.name.charAt(0).toUpperCase() + options.find((option) => option.id === rec.to)?.name.slice(1)}
                     </Item>
-                    <Item>{new Date(rec.recDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Item>
-                    {rec.sourceComment && (
-                      <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
-                        <p>
-                          <span className="tooltip">
-                            <ChatBubbleOutlineIcon />
-                            <span className="tooltiptext">{rec.sourceComment}</span>
-                          </span>
-                        </p>
-                      </Item>)}
+                    {rec.sources
+                .filter((source) => source.source === userId) // Filter the sources to display only the relevant one
+                .map((source) => (
+                  <Stack direction="row" alignItems="center" key={source._id}>
+                    <Item>{new Date(source.recDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Item>
+                    {source.sourceComment && (
+                      <Item>
+                        <span className="tooltip">
+                          <ChatBubbleOutlineIcon />
+                          <span className="tooltiptext">{source.sourceComment}</span>
+                        </span>
+                      </Item>
+                    )}
                   </Stack>
+                ))}
+                </Stack>
                 </TableCell>
                 <TableCell>
                   {typeof rec.rating === 'number' ? (

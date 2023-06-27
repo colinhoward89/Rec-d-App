@@ -40,8 +40,11 @@ recService.saveRec = (rec, userId, source, sourceComment, urgent) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ to, source, sourceComment, mediaId, type, title, author, image, year, urgent })
   })
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
+  .then((res) => res.json())
+  .catch((err) => {
+    throw err;
+  });
+
 };
 
 recService.saveRating = (rec, userId, source, rating, ratingComment) => {  

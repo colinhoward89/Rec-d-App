@@ -12,7 +12,6 @@ export default function FirstVisit() {
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
     const newUser = { ...formJson, email: user.email };
-    console.log(newUser)
     handleCreateUser(newUser);
   };
 

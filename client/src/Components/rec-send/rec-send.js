@@ -19,6 +19,7 @@ export default function SendRecFormDialog({ rec }) {
   const [sourceComment, setSourceComment] = React.useState('');
   const [recipient, setRecipient] = useState(null);
   const [options, setOptions] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchRecipients = async () => {
@@ -50,17 +51,33 @@ export default function SendRecFormDialog({ rec }) {
     setRecipient(newValue);
   };
 
-  const handleSaveRec = () => {
-    handleSendRec({ ...rec });
-    handleClose();
-  };
+  // const handleSaveRec = () => {
+  //   handleSendRec({ ...rec });
+  //   handleClose();
+  // };
 
-  const handleSendRec = async (rec) => {
-    const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
-    if (res.error) {
-      alert(`Error: ${res.message}`);
-    } else {
-      alert("saved to recs")
+  // const handleSendRec = async (rec) => {
+  //   try {
+  //     const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
+  //     if (res && !res.error) {
+  //       alert("Saved to recs");
+  //     }
+  //   } catch (error) {
+  //     alert(`Error: ${error.message}`);
+  //   }
+  // };
+
+  const handleSaveRec = async () => {
+    try {
+      const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
+      if (res && !res.error) {
+        alert('Saved to recs');
+        handleClose();
+      }
+      if (res.error)
+      setError(res.error); // Store the error message in state
+    } catch (error) {
+      console.log(error)
     }
   };
 
@@ -69,6 +86,7 @@ export default function SendRecFormDialog({ rec }) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Send rec</DialogTitle>
         <DialogContent>
+        {error && <DialogContentText color="error">{`Error: ${error}`}</DialogContentText>}
           <DialogContentText>
             "{rec.title}" by "{rec.author}".
           </DialogContentText>
@@ -79,9 +97,7 @@ export default function SendRecFormDialog({ rec }) {
             fullWidth
             value={recipient}
             onChange={handleRecipientChange}
-            renderInput={(params) => (
-              <TextField {...params} label="Recipient" margin="normal" />
-            )}
+            renderInput={(params) => <TextField {...params} label="Recipient" margin="normal" />}
           />
           <TextField
             id="comment"

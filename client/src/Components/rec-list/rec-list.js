@@ -80,7 +80,7 @@ function RecList() {
             return { ...rec, avgRating: 0 };
           }
         }).filter((rec) => typeof rec.avgRating === 'number');
-        
+
         // Sort by urgent flag (true first) and then by average rating
         updatedRecs.sort((a, b) => {
           if (a.urgent && !b.urgent) {
@@ -91,7 +91,7 @@ function RecList() {
             return b.avgRating - a.avgRating; // sort by average rating
           }
         });
-        
+
         setRecs(updatedRecs);
         return updatedRecs;
       });
@@ -106,7 +106,7 @@ function RecList() {
     setSelectedRec(rec);
     await recService.updateUrgent(rec);
     getUserRecommendations(userId);
-  }  
+  }
 
   function toggleRecPop(rec) {
     setSelectedRec(rec);
@@ -148,13 +148,13 @@ function RecList() {
                     <img src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg" alt={rec.title} style={{ width: 'auto', height: '100px' }} />
                   ) : rec.type === 'movie' || rec.type === 'tv' ? (
                     <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
-                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }}/>}
+                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />}
                 </TableCell>
                 <TableCell><Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
                   {rec.urgent && (
-                  <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
-                  <PriorityHighIcon />
-                  </Item>
+                    <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                      <PriorityHighIcon />
+                    </Item>
                   )}
                   <Item>
                     {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
@@ -165,19 +165,35 @@ function RecList() {
                     {rec.type === 'board' && <CasinoIcon fontSize="" />}
                   </Item>
                   <Item>{rec.title}</Item><Item>{rec.author}</Item><Item>{rec.year}</Item></Stack>
-                  <p></p><Stack direction="row"><Item>{options.find(option => option.id === rec.source)?.name.charAt(0).toUpperCase() + options.find(option => option.id === rec.source)?.name.slice(1)}</Item><Item>{new Date(rec.recDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Item>
-                  {rec.sourceComment && (
-                      <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
-                        <p>
-                          <span className="tooltip">
-                            <ChatBubbleOutlineIcon />
-                            <span className="tooltiptext">{rec.sourceComment}</span>
-                          </span>
-                        </p>
-                      </Item>)}
-                      </Stack></TableCell>
+                  <p></p><Stack direction="column">
+                    {rec.sources.map((source, index) => (
+                      <Stack direction="row" key={index}>
+                        <Item>
+                          {options.find((option) => option.id === source.source)?.name.charAt(0).toUpperCase() +
+                            options.find((option) => option.id === source.source)?.name.slice(1)}
+                        </Item>
+                        <Item>
+                          {new Date(source.recDate).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </Item>
+                        {source.sourceComment && (
+                          <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                            <p>
+                              <span className="tooltip">
+                                <ChatBubbleOutlineIcon />
+                                <span className="tooltiptext">{source.sourceComment}</span>
+                              </span>
+                            </p>
+                          </Item>
+                        )}
+                      </Stack>
+                    ))}
+                  </Stack></TableCell>
                 <TableCell>
-                <Button variant='contained' onClick={() => toggleUrgentPop(rec)}><PriorityHighIcon /></Button>
+                  <Button variant='contained' onClick={() => toggleUrgentPop(rec)}><PriorityHighIcon /></Button>
                   <p><Button variant='contained' onClick={() => toggleRatingPop(rec)}>&nbsp;Add rating&nbsp;</Button></p>
                   <p><Button variant='contained' onClick={() => toggleRecPop(rec)}>Recommend</Button></p>
                 </TableCell>

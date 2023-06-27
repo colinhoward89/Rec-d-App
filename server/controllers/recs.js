@@ -1,9 +1,10 @@
 const recs = require('../models/recs');
 const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
 
 const getRecs = async (req, res) => {
   try {
-    const {userId} = req.query;
+    const { userId } = req.query;
     const userRecs = await recs.find({ to: userId });
     console.log(userRecs)
     return res.status(200).send(userRecs);
@@ -16,7 +17,7 @@ const getRecs = async (req, res) => {
 const getSentRecs = async (req, res) => {
   try {
     const source = req.params.userId;
-    const userRecs = await recs.find({ source });
+    const userRecs = await recs.find({ 'sources.source': source });
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);
@@ -27,8 +28,52 @@ const getSentRecs = async (req, res) => {
 const saveRec = async (req, res) => {
   try {
     const { to, source, sourceComment, mediaId, type, title, author, image, year, urgent } = req.body;
+    // Check if the user has already rated the mediaId
+    const existingRec = await recs.findOne({ to, mediaId });
+    if (existingRec && existingRec.rating) {
+      return res.status(200).json({error: "User has already rated."});
+    }
+    // Convert source to ObjectId
+    const sourceObjectId = new mongoose.Types.ObjectId(source);
+
+    // Check if the source has already recommended the mediaId
+    const existingSourceRec = existingRec && existingRec.sources.find((rec) => rec.source.equals(sourceObjectId));
+    if (existingSourceRec) {
+      return res.status(400).json({error: "You have already recommended this." });
+    }
+
     const recDate = new Date();
-    const userRecs = await recs.create({ to, source, sourceComment, mediaId, type, title, author, image, year, urgent, recDate });
+    let userRecs;
+    if (existingRec) {
+      // Update the existing recommendation by pushing the new source, sourceComment, and recDate
+      userRecs = await recs.findByIdAndUpdate(
+        existingRec._id,
+        {
+          $push: {
+            sources: {
+              source,
+              sourceComment,
+              recDate,
+            },
+          },
+        },
+        { new: true }
+      );
+    } else {
+      // Create a new recommendation with all the fields
+      userRecs = await recs.create({
+        to,
+        sources: [{ source, sourceComment, recDate }],
+        mediaId,
+        type,
+        title,
+        author,
+        image,
+        year,
+        urgent,
+        recDate,
+      });
+    }
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);
@@ -41,7 +86,7 @@ const saveRating = async (req, res) => {
     const { to, source, rating, ratingComment, mediaId, type, title, author, image, year } = req.body;
     const recDate = new Date();
     const ratingDate = new Date();
-    const userRecs = await recs.create({ to, source, rating, ratingComment, mediaId, type, title, author, image, year, ratingDate, recDate });
+    const userRecs = await recs.create({ to, sources: [{ source, recDate }], rating, ratingComment, mediaId, type, title, author, image, year, ratingDate, recDate });
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);

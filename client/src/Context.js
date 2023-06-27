@@ -21,7 +21,6 @@ const ContextProvider = ({ children }) => {
     if (user) {
       const email = user.email;
       const receivedUser = await userService.getUser(email);
-      console.log(receivedUser)
       if (receivedUser) {
         setCurrentUser({
           email: receivedUser[0].email,

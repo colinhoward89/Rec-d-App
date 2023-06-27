@@ -77,6 +77,8 @@ function RatingList() {
       });
   }
 
+  console.log(recs)
+
   function toggleRatingPop(rec) {
     setSelectedRec(rec);
     setRatingSeen(!ratingSeen);
@@ -131,22 +133,26 @@ function RatingList() {
                     <Item>{rec.author}</Item>
                     <Item>{rec.year}</Item>
                   </Stack>
-                  <p></p><Stack direction="row">
+                  <p></p><Stack direction="column">
+                    {rec.sources.map((source, index) => (
+                    <Stack direction="row">
                     <Item>
-                      {options.find(option => option.id === rec.source)?.name.charAt(0).toUpperCase() + options.find(option => option.id === rec.source)?.name.slice(1)}
+                      {options.find(option => option.id === source.source)?.name.charAt(0).toUpperCase() + options.find(option => option.id === source.source)?.name.slice(1)}
                     </Item>
                     <Item>{new Date(rec.ratingDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Item>
-                    {rec.sourceComment && (
+                    {source.sourceComment && (
                       <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
                         <p>
                           <span className="tooltip">
                             <ChatBubbleOutlineIcon />
-                            <span className="tooltiptext">{rec.sourceComment}</span>
+                            <span className="tooltiptext">{source.sourceComment}</span>
                           </span>
                         </p>
-                      </Item>)}
+                      </Item>
+                      )}
                   </Stack>
-                </TableCell>
+                    ))}
+                </Stack></TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center">
                   {typeof rec.rating === 'number' ? (
