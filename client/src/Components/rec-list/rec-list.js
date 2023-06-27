@@ -41,6 +41,9 @@ function RecList() {
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [selectedRec, setSelectedRec] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+console.log(loading)
 
   useEffect(() => {
     getUserRecommendations(currentUser.id)
@@ -59,6 +62,7 @@ function RecList() {
         );
         setOptions(sourceNamesArray);
         setFetchSourcesComplete(true);
+        setLoading(false);
       } else {
         console.log('No user info found 😞');
       }
@@ -122,7 +126,9 @@ function RecList() {
 
   return (
     <>
-        {recs.length === 0 ? (
+      {loading ? (
+        <p className={styles.p}>Loading...</p>
+      ) : recs.length === 0 ? (
       <p>No recommendations outstanding</p>
     ) : (
       <TableContainer component={Paper} className={styles.RecList}>
@@ -204,20 +210,24 @@ function RecList() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+        </TableContainer>
     )}
-      {ratingSeen ? <RatingFormDialog
+    {ratingSeen ? (
+      <RatingFormDialog
         rec={selectedRec}
         open={ratingSeen}
         onSubmit={handleRatingSubmit}
-      /> : null}
-      {recSeen ? <SendRecFormDialog
+      />
+    ) : null}
+    {recSeen ? (
+      <SendRecFormDialog
         rec={selectedRec}
         open={recSeen}
-      /> : null}
-    </>
-  );
-};
+      />
+    ) : null}
+  </>
+);
+    }
 
 
 export default RecList;

@@ -3,23 +3,28 @@ const BASE_URL = 'http://localhost:3001';
 const recService = {};
 
 recService.getUserRecs = (userId) => {
-  const queryString = `userId=${userId}`;
-  return fetch(`${BASE_URL}/recs?${queryString}`, {
+  return fetch(`${BASE_URL}/recs`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-User-Id': userId,
+    },
   })
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
 
 recService.getSentRecs = (userId) => {
-  return fetch(`${BASE_URL}/user/${userId}/sentrecs`, {
+  return fetch(`${BASE_URL}/sentrecs`, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-User-Id': userId,
+    },
   })
     .then((res) => res.json())
     .catch((err) => console.log(err));
@@ -33,7 +38,7 @@ recService.saveRec = (rec, userId, source, sourceComment, urgent) => {
   const author = rec.author;
   const image = rec.image;
   const year = rec.year;
-  return fetch(`${BASE_URL}/user/${userId}/recs`, {
+  return fetch(`${BASE_URL}/saverec`, {
     method: 'POST',
     credentials: 'include',
     mode: 'cors',
@@ -55,7 +60,7 @@ recService.saveRating = (rec, userId, source, rating, ratingComment) => {
   const author = rec.author;
   const image = rec.image;
   const year = rec.year;
-  return fetch(`${BASE_URL}/user/${userId}/rating`, {
+  return fetch(`${BASE_URL}/saverating`, {
     method: 'POST',
     credentials: 'include',
     mode: 'cors',
@@ -67,12 +72,12 @@ recService.saveRating = (rec, userId, source, rating, ratingComment) => {
 };
 
 recService.updateRating = (userId, _id, rating, ratingComment) => {  
-  return fetch(`${BASE_URL}/user/${userId}/recs`, {
+  return fetch(`${BASE_URL}/updaterec`, {
     method: 'PUT',
     credentials: 'include',
     mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ _id, rating, ratingComment })
+    body: JSON.stringify({ userId, _id, rating, ratingComment })
   })
     .then((res) => res.json())
     .catch((err) => console.log(err));

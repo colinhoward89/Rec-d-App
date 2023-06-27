@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const getRecs = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.headers['x-user-id'];
     const userRecs = await recs.find({ to: userId });
     console.log(userRecs)
     return res.status(200).send(userRecs);
@@ -16,8 +16,8 @@ const getRecs = async (req, res) => {
 
 const getSentRecs = async (req, res) => {
   try {
-    const source = req.params.userId;
-    const userRecs = await recs.find({ 'sources.source': source });
+    const userId = req.headers['x-user-id'];
+    const userRecs = await recs.find({ 'sources.source': userId });
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);

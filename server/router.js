@@ -25,10 +25,10 @@ router.put('/acceptfriendrequest', userController.acceptFriendRequest);
 router.put('/editname', userController.editName);
 
 router.get('/recs', recsController.getRecs);
-router.get('/user/:userId/sentrecs', recsController.getSentRecs);
-router.post('/user/:userId/recs', recsController.saveRec);
-router.post('/user/:userId/rating', recsController.saveRating);
-router.put('/user/:userId/recs', recsController.updateRec);
+router.get('/sentrecs', recsController.getSentRecs);
+router.post('/saverec', recsController.saveRec);
+router.post('/saverating', recsController.saveRating);
+router.put('/updaterec', recsController.updateRec);
 router.put('/urgentrec', recsController.urgentRec);
 
 router.get('/music/search/:query', async (req, res) => {

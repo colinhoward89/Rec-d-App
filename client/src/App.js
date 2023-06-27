@@ -40,11 +40,10 @@ function App() {
             <Route path="/" element={<AuthenticationGuard component={LandingPage} />} />
             <Route path="/home" element={<AuthenticationGuard component={RecList} />} />
             <Route path="/profile" element={<AuthenticationGuard component={Profile} />} />
-            <Route path="/user/:userId/profile" element={<AuthenticationGuard component={Profile} />} />
             <Route path="/recs" element={<AuthenticationGuard component={RecList} />} />
             <Route path="/:searchtype/search/:query" element={<AuthenticationGuard component={SearchList} />} />
-            <Route path="/user/:userId/ratings" element={<AuthenticationGuard component={RatingList} />} />
-            <Route path="/user/:userId/sentrecs" element={<AuthenticationGuard component={RecSentList} />} />
+            <Route path="/ratings" element={<AuthenticationGuard component={RatingList} />} />
+            <Route path="/sentrecs" element={<AuthenticationGuard component={RecSentList} />} />
             <Route path="/friends" element={<AuthenticationGuard component={FriendList} />} />
             <Route path="/logout" element={<AuthenticationGuard component={Logout} />} />
           </Routes>

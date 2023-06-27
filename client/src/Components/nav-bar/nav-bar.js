@@ -177,7 +177,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <NavLink to={`/user/${userId}/profile`}>
+      <NavLink to={`/profile`}>
         <MenuItem>
           <IconButton
             size="large"
@@ -214,7 +214,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>My Recs</p>
         </MenuItem>
       </NavLink>
-      <NavLink to={`/user/${userId}/ratings`}>
+      <NavLink to={`/ratings`}>
         <MenuItem>
           <IconButton
             size="medium"
@@ -226,7 +226,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>My Ratings</p>
         </MenuItem>
       </NavLink>
-      <NavLink to={`/user/${userId}/sentrecs`}>
+      <NavLink to={`/sentrecs`}>
         <MenuItem>
           <IconButton
             size="large"
@@ -330,7 +330,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
                 <CallReceivedIcon />
               </IconButton>
             </NavLink>
-            <NavLink to={`/user/${userId}/ratings`}>
+            <NavLink to={`/ratings`}>
               <IconButton
                 size="medium"
                 aria-label="my-ratings"
@@ -339,7 +339,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
                 <StarIcon />
               </IconButton>
             </NavLink>
-            <NavLink to={`/user/${userId}/sentrecs`}>
+            <NavLink to={`/sentrecs`}>
               <IconButton
                 style={{ marginLeft: '5px', marginTop: '3px', color:'white'}}
                 size="medium"

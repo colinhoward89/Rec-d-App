@@ -98,7 +98,7 @@ export default function RatingFormDialog({ rec }) {
 
   const handleAddRating = async (rec) => {
     const sourceId = source ? source.id : null; // Use null if source doesn't exist
-    const res = await recService.saveRating(rec, userId, source.id, value, ratingComment);
+    const res = await recService.saveRating(rec, userId, sourceId, value, ratingComment);
     if (res.error) {
       alert(`Error: ${res.message}`);
     } else {
