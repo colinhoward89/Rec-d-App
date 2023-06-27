@@ -166,7 +166,7 @@ function RatingList() {
                       </p>
                     )}
                   </Stack>
-                  <p><Button variant="contained" startIcon={<EditIcon />}>Edit</Button></p>
+                  <p><Button variant="contained" onClick={() => toggleRatingPop(rec)} startIcon={<EditIcon />}>Edit</Button></p>
                   <p><Button variant="contained" onClick={() => toggleSendRecPop(rec)}>Recommend</Button></p>
                 </TableCell>
               </TableRow>

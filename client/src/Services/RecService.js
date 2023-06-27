@@ -75,4 +75,16 @@ recService.updateRating = (userId, _id, rating, ratingComment) => {
     .catch((err) => console.log(err));
 };
 
+recService.updateUrgent = (rec) => {  
+  return fetch(`${BASE_URL}/urgentrec`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rec })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
 export default recService;

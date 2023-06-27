@@ -61,4 +61,22 @@ const updateRec = async (req, res) => {
   }
 };
 
-module.exports = { getRecs, saveRec, updateRec, saveRating, getSentRecs };
+const urgentRec = async (req, res) => {
+  try {
+    const { rec } = req.body;
+    const updatedRec = await recs.updateOne(
+      { _id: rec._id },
+      {
+        $set: {
+          urgent: rec.urgent === true ? false : true,
+        },
+      }
+    );
+    return res.status(200).send(updatedRec);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+};
+
+module.exports = { getRecs, saveRec, updateRec, saveRating, getSentRecs, urgentRec };

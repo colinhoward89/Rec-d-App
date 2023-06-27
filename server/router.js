@@ -28,6 +28,7 @@ router.get('/user/:userId/sentrecs', recsController.getSentRecs);
 router.post('/user/:userId/recs', recsController.saveRec);
 router.post('/user/:userId/rating', recsController.saveRating);
 router.put('/user/:userId/recs', recsController.updateRec);
+router.put('/urgentrec', recsController.urgentRec);
 
 router.get('/music/search/:query', async (req, res) => {
   const query = req.params.query;

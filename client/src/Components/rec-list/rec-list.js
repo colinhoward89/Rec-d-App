@@ -34,6 +34,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function RecList() {
   const { currentUser } = useContext(Context)
+  const userId = currentUser.id;
   const [recs, setRecs] = useState([]);
   const [ratingSeen, setRatingSeen] = useState(false);
   const [recSeen, setRecSeen] = useState(false);
@@ -100,6 +101,12 @@ function RecList() {
     setSelectedRec(rec);
     setRatingSeen(!ratingSeen);
   }
+
+  async function toggleUrgentPop(rec) {
+    setSelectedRec(rec);
+    await recService.updateUrgent(rec);
+    getUserRecommendations(userId);
+  }  
 
   function toggleRecPop(rec) {
     setSelectedRec(rec);
@@ -170,7 +177,8 @@ function RecList() {
                       </Item>)}
                       </Stack></TableCell>
                 <TableCell>
-                  <Button variant='contained' onClick={() => toggleRatingPop(rec)}>&nbsp;Add rating&nbsp;</Button>
+                <Button variant='contained' onClick={() => toggleUrgentPop(rec)}><PriorityHighIcon /></Button>
+                  <p><Button variant='contained' onClick={() => toggleRatingPop(rec)}>&nbsp;Add rating&nbsp;</Button></p>
                   <p><Button variant='contained' onClick={() => toggleRecPop(rec)}>Recommend</Button></p>
                 </TableCell>
               </TableRow>

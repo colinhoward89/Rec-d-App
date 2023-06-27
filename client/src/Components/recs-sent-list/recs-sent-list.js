@@ -79,7 +79,6 @@ function RecSentList() {
       .then((recs) => {
         let filteredRecs = recs.filter((rec) => rec.source === userId);
         setRecs(filteredRecs);
-        console.log(filteredRecs)
         return filteredRecs;
       });
   }
