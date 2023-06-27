@@ -29,7 +29,6 @@ const FriendList = () => {
   const [addSourceSeen, setAddSourceSeen] = useState(false);
   const [recs, setRecs] = useState([]);
 
-
   useEffect(() => {
     getUserRecommendations(userId)
       .catch((e) => console.log(e));
@@ -140,7 +139,7 @@ const FriendList = () => {
   return (
     <div>
       <br></br>
-      <Button variant="contained" onClick={() => toggleRequestsPop()}>Requests (0)</Button>
+      <Button variant="contained" onClick={() => toggleRequestsPop()}>Requests ({currentUser.requestRec.length})</Button>
       <Button variant="contained" onClick={() => toggleAddFriendPop()}>Add Friend</Button>
       <Button variant="contained" onClick={() => toggleAddSourcePop()}>Add Source</Button>
       <div className={styles.RecList}>

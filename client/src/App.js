@@ -16,9 +16,7 @@ import FirstVisit from './Components/firstvisit/firstvisit';
 
 function App() {
   const { currentUser, isAuthenticated, isLoading, handleGetUser } = useContext(
-    Context
-  )
-  console.log(isAuthenticated)
+    Context)
 
   useEffect(() => {
     if (isAuthenticated) {

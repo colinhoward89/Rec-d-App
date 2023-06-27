@@ -5,7 +5,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { Context } from '../../Context';
 
 export default function FriendRequestsFormDialog() {
-  const { currentUser } = useContext(Context);
+  const { currentUser, refreshUser } = useContext(Context);
+  const userId = currentUser.id;
   const [open, setOpen] = useState(true);
   const [requestsSent, setRequestsSent] = useState({});
   const [requestsRec, setRequestsRec] = useState({});
@@ -30,8 +31,8 @@ export default function FriendRequestsFormDialog() {
         const sourceName = await userService.getUserInfo(id);
         sourceNamesArray.push({
           id,
-          name: sourceName.name,
-          email: sourceName.email,
+          name: sourceName[0].name,
+          email: sourceName[0].email,
         });
       }
       setRequestsRec(sourceNamesArray);
@@ -43,19 +44,30 @@ export default function FriendRequestsFormDialog() {
 
   const handleClose = () => {
     setOpen(false);
+    refreshUser();
   };
 
-  const handleReject = (request) => {
-    // Handle reject logic here
+  const handleReject = async (request) => {
+    await userService.rejectFriendRequest(userId, request);
+    setRequestsRec((prevRequestsRec) =>
+    prevRequestsRec.filter((prevRequest) => prevRequest.id !== request.id)
+  );
   };
 
-  const handleAccept = (request) => {
-    // Handle accept logic here
+  const handleAccept = async (request) => {
+    await userService.acceptFriendRequest(userId, request);
+    setRequestsRec((prevRequestsRec) =>
+    prevRequestsRec.filter((prevRequest) => prevRequest.id !== request.id)
+  );
   };
 
-  const handleDelete = (request) => {
-    // Handle delete logic here
-  };
+  const handleDelete = async (request) => {
+    await userService.deleteFriendRequest(userId, request);
+    setRequestsSent((prevRequestsSent) =>
+    prevRequestsSent.filter((prevRequest) => prevRequest.id !== request.id)
+  );
+  refreshUser();
+};
 
   return (
     <div>

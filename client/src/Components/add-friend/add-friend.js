@@ -5,7 +5,7 @@ import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogConte
 import { Context } from '../../Context';
 
 export default function FriendFormDialog() {
-  const { currentUser } = useContext(Context);
+  const { currentUser, refreshUser } = useContext(Context);
   const userId = currentUser.id;
   const [open, setOpen] = useState(true);
   const [newFriend, setNewFriend] = useState(null);
@@ -30,6 +30,7 @@ export default function FriendFormDialog() {
 
   const handleClose = () => {
     setOpen(false);
+    refreshUser();
   };
 
   const handleChange = (event) => {

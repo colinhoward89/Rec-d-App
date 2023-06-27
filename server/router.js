@@ -19,6 +19,9 @@ router.get('/username/:source', userController.getSourceName);
 router.post('/newsource', userController.newSource);
 router.put('/invitefriend', userController.inviteFriend);
 router.get('/friendrequests', userController.friendRequests);
+router.put('/deletefriendrequest', userController.deleteFriendRequest);
+router.put('/rejectfriendrequest', userController.rejectFriendRequest);
+router.put('/acceptfriendrequest', userController.acceptFriendRequest);
 
 router.get('/recs', recsController.getRecs);
 router.get('/user/:userId/sentrecs', recsController.getSentRecs);

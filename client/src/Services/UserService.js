@@ -113,3 +113,39 @@ export const friendRequests = (userId) => {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 };
+
+export const deleteFriendRequest = (userId, request) => {  
+  return fetch(`${BASE_URL}/deletefriendrequest`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, request })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
+export const rejectFriendRequest = (userId, request) => {  
+  return fetch(`${BASE_URL}/rejectfriendrequest`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, request })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};
+
+export const acceptFriendRequest = (userId, request) => {  
+  return fetch(`${BASE_URL}/acceptfriendrequest`, {
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, request })
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+};

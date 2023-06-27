@@ -49,7 +49,6 @@ const getUserInfo = async (req, res) => {
   try {
     const id = req.params.id;
     const existingUser = await User.find({ _id: id });
-    console.log(existingUser)
     if (!existingUser) {
       throw new Error('User not found');
     }
@@ -137,11 +136,8 @@ const inviteFriend = async (req, res) => {
 
 const friendRequests = async (req, res) => {
   try {
-    console.log("query ", req.query)
     const userId = req.query.userId;
-    console.log("userId ", userId)
     const userRequests = await User.findById(userId);
-    console.log(userRequests);
     const { requestRec, requestSent } = userRequests;
     res.status(200).json({ requestRec, requestSent });
   } catch (error) {
@@ -150,5 +146,63 @@ const friendRequests = async (req, res) => {
   }
 };
 
-module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName, newSource, inviteFriend, friendRequests };
+const deleteFriendRequest = async (req, res) => {
+  try {
+    const { userId, request } = req.body;
+    const recipient = await User.findByIdAndUpdate(
+      { _id: request.id },
+      { $pull: { requestRec: userId } },
+      { new: true }
+    );
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $pull: { requestSent: recipient._id } },
+      { new: true }
+    );
+    res.status(200).json({ user, recipient });
+  } catch (err) {
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
+
+const rejectFriendRequest = async (req, res) => {
+  try {
+    const { userId, request } = req.body;
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $pull: { requestRec: request.id } },
+      { new: true }
+    );
+    const recipient = await User.findByIdAndUpdate(
+      { _id: request.id },
+      { $pull: { requestSent: userId } },
+      { new: true }
+    );
+    res.status(200).json({ user, recipient });
+  } catch (err) {
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
+
+const acceptFriendRequest = async (req, res) => {
+  try {
+    const { userId, request } = req.body;
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $pull: { requestRec: request.id }, $push: { sources: request.id } },
+      { new: true }
+    );
+    const recipient = await User.findByIdAndUpdate(
+      { _id: request.id },
+      { $pull: { requestSent: userId }, $push: { sources: userId } },
+      { new: true }
+    );
+    res.status(200).json({ user, recipient });
+  } catch (err) {
+    res.status(404).json({ error: err.message, message: 'User not found' });
+  }
+};
+
+
+module.exports = { create, login, getUser, getUserInfo, editUser, deleteUser, profile, getSources, getSourceName, newSource, inviteFriend, friendRequests, deleteFriendRequest, rejectFriendRequest, acceptFriendRequest };
 
