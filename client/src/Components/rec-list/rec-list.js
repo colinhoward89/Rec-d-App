@@ -24,6 +24,8 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { Context } from '../../Context';
+import { createTheme, ThemeProvider } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -42,8 +44,10 @@ function RecList() {
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [selectedRec, setSelectedRec] = useState(null);
   const [loading, setLoading] = useState(true);
-
-console.log(loading)
+  const smallButtonWidth = 50;
+  const buttonWidth = 120;
+  const theme = createTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     getUserRecommendations(currentUser.id)
@@ -129,105 +133,161 @@ console.log(loading)
       {loading ? (
         <p className={styles.p}>Loading...</p>
       ) : recs.length === 0 ? (
-      <p>No recommendations outstanding</p>
-    ) : (
-      <TableContainer component={Paper} className={styles.RecList}>
-        <Table sx={{ minWidth: 200 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell colSpan={3} align="center" ><Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}> Rec'd List</Box></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {recs.map((rec) => (
-              <TableRow
-                key={rec._id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {rec.type === 'book' ? (
-                    rec.image ? (
-                      <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
-                    ) : (
-                      <img src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg" alt={rec.title} style={{ width: '100px', height: '100px' }} />
-                    )
-                  ) : rec.type === 'video' ? (
-                    <img src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png" alt={rec.title} style={{ width: '100px', height: 'auto' }} />
-                  ) : rec.type === 'board' ? (
-                    <img src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg" alt={rec.title} style={{ width: 'auto', height: '100px' }} />
-                  ) : rec.type === 'movie' || rec.type === 'tv' ? (
-                    <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
-                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />}
-                </TableCell>
-                <TableCell><Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
-                  {rec.urgent && (
-                    <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
-                      <PriorityHighIcon />
-                    </Item>
-                  )}
-                  <Item>
-                    {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
-                    {rec.type === 'movie' && <MovieIcon fontSize="" />}
-                    {rec.type === 'tv' && <TvIcon fontSize="" />}
-                    {rec.type === 'book' && <BookIcon fontSize="" />}
-                    {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
-                    {rec.type === 'board' && <CasinoIcon fontSize="" />}
-                  </Item>
-                  <Item>{rec.title}</Item><Item>{rec.author}</Item><Item>{rec.year}</Item></Stack>
-                  <p></p><Stack direction="column">
-                    {rec.sources.map((source, index) => (
-                      <Stack direction="row" key={index}>
-                        <Item>
-                          {options.find((option) => option.id === source.source)?.name.charAt(0).toUpperCase() +
-                            options.find((option) => option.id === source.source)?.name.slice(1)}
-                        </Item>
-                        <Item>
-                          {new Date(source.recDate).toLocaleDateString('en-GB', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                          })}
-                        </Item>
-                        {source.sourceComment && (
-                          <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
-                            <p>
-                              <span className="tooltip">
-                                <ChatBubbleOutlineIcon />
-                                <span className="tooltiptext">{source.sourceComment}</span>
-                              </span>
-                            </p>
-                          </Item>
-                        )}
-                      </Stack>
-                    ))}
-                  </Stack></TableCell>
-                <TableCell>
-                  <Button variant='contained' onClick={() => toggleUrgentPop(rec)}><PriorityHighIcon /></Button>
-                  <p><Button variant='contained' onClick={() => toggleRatingPop(rec)}>&nbsp;Add rating&nbsp;</Button></p>
-                  <p><Button variant='contained' onClick={() => toggleRecPop(rec)}>Recommend</Button></p>
+        <p>No recommendations outstanding</p>
+      ) : (
+        <TableContainer component={Paper} className={styles.RecList}>
+          <Table sx={{ minWidth: 200 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell colSpan={3} align="center">
+                  <Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}> Rec'd List</Box>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        </TableContainer>
-    )}
-    {ratingSeen ? (
-      <RatingFormDialog
-        rec={selectedRec}
-        open={ratingSeen}
-        onSubmit={handleRatingSubmit}
-      />
-    ) : null}
-    {recSeen ? (
-      <SendRecFormDialog
-        rec={selectedRec}
-        open={recSeen}
-      />
-    ) : null}
-  </>
-);
-    }
+            </TableHead>
+            <TableBody>
+              {recs.map((rec) => (
+                <TableRow key={rec._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component="th" scope="row">
+                    {rec.type === 'book' ? (
+                      rec.image ? (
+                        <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
+                      ) : (
+                        <img
+                          src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg"
+                          alt={rec.title}
+                          style={{ width: '100px', height: '100px' }}
+                        />
+                      )
+                    ) : rec.type === 'video' ? (
+                      <img
+                        src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png"
+                        alt={rec.title}
+                        style={{ width: '100px', height: 'auto' }}
+                      />
+                    ) : rec.type === 'board' ? (
+                      <img
+                        src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg"
+                        alt={rec.title}
+                        style={{ width: 'auto', height: '100px' }}
+                      />
+                    ) : rec.type === 'movie' || rec.type === 'tv' ? (
+                      <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                    ) : (
+                      <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                    )}
+                  </TableCell>
+                  {isSmallScreen ? (
+                    <TableCell>
+                      <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
+                        {rec.urgent && (
+                          <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                            <PriorityHighIcon />
+                          </Item>
+                        )}
+                        <Item>{rec.title}</Item>
+                        <Item>{rec.author}</Item>
+                      </Stack>
+                      <Stack direction="column">
+                        {rec.sources.map((source, index) => (
+                          <Stack direction="row" key={index}>
+                            <Item>
+                              {options.find((option) => option.id === source.source)?.name.charAt(0).toUpperCase() +
+                                options.find((option) => option.id === source.source)?.name.slice(1)}
+                            </Item>
+                            {source.sourceComment && (
+                              <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                                <p>
+                                  <span className="tooltip">
+                                    <ChatBubbleOutlineIcon />
+                                    <span className="tooltiptext">{source.sourceComment}</span>
+                                  </span>
+                                </p>
+                              </Item>
+                            )}
+                          </Stack>
+                        ))}
+                      </Stack>
 
+                    </TableCell>
+                  ) : (<TableCell>
+                    <Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
+                      {rec.urgent && (
+                        <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                          <PriorityHighIcon />
+                        </Item>
+                      )}
+                      <Item>
+                        {rec.type === 'music' && <MusicNoteIcon fontSize="" />}
+                        {rec.type === 'movie' && <MovieIcon fontSize="" />}
+                        {rec.type === 'tv' && <TvIcon fontSize="" />}
+                        {rec.type === 'book' && <BookIcon fontSize="" />}
+                        {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
+                        {rec.type === 'board' && <CasinoIcon fontSize="" />}
+                      </Item>
+                      <Item>{rec.title}</Item>
+                      <Item>{rec.author}</Item>
+                      <Item>{rec.year}</Item>
+                    </Stack>
+                    <Stack direction="column">
+                      {rec.sources.map((source, index) => (
+                        <Stack direction="row" key={index}>
+                          <Item>
+                            {options.find((option) => option.id === source.source)?.name.charAt(0).toUpperCase() +
+                              options.find((option) => option.id === source.source)?.name.slice(1)}
+                          </Item>
+                          <Item>
+                            {new Date(source.recDate).toLocaleDateString('en-GB', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
+                          </Item>
+                          {source.sourceComment && (
+                            <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
+                              <p>
+                                <span className="tooltip">
+                                  <ChatBubbleOutlineIcon />
+                                  <span className="tooltiptext">{source.sourceComment}</span>
+                                </span>
+                              </p>
+                            </Item>
+                          )}
+                        </Stack>
+                      ))}
+                    </Stack>
+                  </TableCell>)}
+                  <TableCell>
+                    <Button variant="contained" size="small" style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleUrgentPop(rec)}>
+                      <PriorityHighIcon />
+                    </Button>
+                    <p>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }}
+                        onClick={() => toggleRatingPop(rec)}
+                      >
+                        {isSmallScreen ? 'Rate' : 'Add Rating'}
+                      </Button>
+                    </p>
+                    <p>
+                      <Button variant="contained" size="small" style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleRecPop(rec)}>
+                        Rec{!isSmallScreen && 'ommend'}
+                      </Button>
+                    </p>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      {ratingSeen ? (
+        <RatingFormDialog rec={selectedRec} open={ratingSeen} onSubmit={handleRatingSubmit} />
+      ) : null}
+      {recSeen ? <SendRecFormDialog rec={selectedRec} open={recSeen} /> : null}
+    </>
+  );
+}
 
 export default RecList;
