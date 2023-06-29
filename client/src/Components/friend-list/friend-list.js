@@ -10,6 +10,12 @@ import { Context } from '../../Context';
 import SourceFormDialog from '../add-source/add-source';
 import FriendFormDialog from '../add-friend/add-friend';
 import FriendRequestsFormDialog from '../friend-requests/friend-requests';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import MovieIcon from '@mui/icons-material/Movie';
+import TvIcon from '@mui/icons-material/Tv';
+import BookIcon from '@mui/icons-material/Book';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import CasinoIcon from '@mui/icons-material/Casino';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -61,49 +67,68 @@ const FriendList = () => {
 
   function getRecommendationStats(recs) {
     const statsBySourceAndType = {};
-
+  
     recs.forEach((rec) => {
-      if (!statsBySourceAndType[rec.source]) {
-        statsBySourceAndType[rec.source] = {};
-      }
-      if (!statsBySourceAndType[rec.source][rec.type]) {
-        statsBySourceAndType[rec.source][rec.type] = {
-          totalRecs: 0,
-          totalRatings: 0,
-          totalScore: 0,
-          averageScore: 0,
+      rec.sources.forEach((source) => {
+        const sourceId = source.source;
+        const sourceStats = statsBySourceAndType[sourceId];
+  
+        if (!sourceStats) {
+          statsBySourceAndType[sourceId] = {};
+        }
+  
+        const type = rec.type;
+        const sourceTypeStats = statsBySourceAndType[sourceId][type];
+  
+        if (!sourceTypeStats) {
+          statsBySourceAndType[sourceId][type] = {
+            totalRecs: 0,
+            totalRatings: 0,
+            totalScore: 0,
+            averageScore: 0,
+          };
+        }
+  
+        const { totalRecs, totalRatings, totalScore } = statsBySourceAndType[sourceId][type];
+  
+        statsBySourceAndType[sourceId][type] = {
+          totalRecs: totalRecs + 1,
+          totalRatings: typeof rec.rating === 'number' && !isNaN(rec.rating) ? totalRatings + 1 : totalRatings,
+          totalScore: typeof rec.rating === 'number' && !isNaN(rec.rating) ? totalScore + rec.rating : totalScore,
+          averageScore: typeof rec.rating === 'number' && !isNaN(rec.rating) ? (totalScore + rec.rating) / (totalRatings + 1) : 0,
         };
-      }
-      statsBySourceAndType[rec.source][rec.type].totalRecs++;
-      if (typeof rec.rating === 'number' && !isNaN(rec.rating)) {
-        statsBySourceAndType[rec.source][rec.type].totalRatings++;
-        statsBySourceAndType[rec.source][rec.type].totalScore += rec.rating;
-        statsBySourceAndType[rec.source][rec.type].averageScore = (statsBySourceAndType[rec.source][rec.type].totalScore / statsBySourceAndType[rec.source][rec.type].totalRatings);
-      }
-    });
-    return statsBySourceAndType;
-  }
-
-  function getUserRecommendations(userId) {
-    return recService.getUserRecs(userId)
-      .then((recs) => {
-        let filteredRecs = recs.filter((rec) => rec.to === userId);
-        const updatedRecs = filteredRecs.map((rec) => {
-          const ratings = recs.filter((r) => r.source === rec.source && r.type === rec.type && typeof r.rating === 'number' && !isNaN(r.rating)).map((r) => r.rating);
-          if (ratings.length > 0) {
-            const avgRating = ratings.reduce((acc, val) => acc + val) / ratings.length;
-            return { ...rec, avgRating };
-          } else {
-            return { ...rec, avgRating: 0 };
-          }
-        }).filter((rec) => typeof rec.avgRating === 'number');
-        updatedRecs.sort((a, b) => b.avgRating - a.avgRating);
-        setRecs(updatedRecs);
-        const statsBySourceAndType = getRecommendationStats(updatedRecs);
-        setStats(statsBySourceAndType);
-        return updatedRecs;
       });
-  }
+    });
+  
+    return statsBySourceAndType;
+  }  
+
+function getUserRecommendations(userId) {
+  return recService.getUserRecs(userId).then((recs) => {
+    let filteredRecs = recs.filter((rec) => rec.to === userId);
+    const updatedRecs = filteredRecs.map((rec) => {
+      const ratings = recs.filter(
+        (r) =>
+          rec.sources.some((source) => source.source === r.source) &&
+          r.type === rec.type &&
+          typeof r.rating === 'number' &&
+          !isNaN(r.rating)
+      ).map((r) => r.rating);
+      if (ratings.length > 0) {
+        const avgRating = ratings.reduce((acc, val) => acc + val) / ratings.length;
+        return { ...rec, avgRating };
+      } else {
+        return { ...rec, avgRating: 0 };
+      }
+    }).filter((rec) => typeof rec.avgRating === 'number');
+    updatedRecs.sort((a, b) => b.avgRating - a.avgRating);
+    setRecs(updatedRecs);
+    const statsBySourceAndType = getRecommendationStats(updatedRecs);
+    setStats(statsBySourceAndType);
+    return updatedRecs;
+  });
+}
+
 
   const sourcesWithRecs = Object.keys(stats).filter((sourceId) => {
     const sourceStats = stats[sourceId];
@@ -155,7 +180,7 @@ const FriendList = () => {
               </TableRow>
               <TableRow>
                 <TableCell align="center">Source</TableCell>
-                <TableCell align="center">Type</TableCell>
+                <TableCell align="center"></TableCell>
                 <TableCell align="center">Recs</TableCell>
                 <TableCell align="center">Ratings</TableCell>
                 <TableCell align="center">Total</TableCell>
@@ -179,7 +204,8 @@ const FriendList = () => {
                         {sourceName}
                       </TableCell>
                       <TableCell align="center">
-                        {type === 'tv' ? 'TV' : type.charAt(0).toUpperCase() + type.slice(1)}
+                      {type === 'music' ? <MusicNoteIcon fontSize="small" /> : type === 'movie' ? <MovieIcon fontSize="small" /> : type === 'tv' ? <TvIcon fontSize="small" /> : type === 'book' ? <BookIcon fontSize="small" /> : type === 'video' ? <VideogameAssetIcon fontSize="small" /> : <CasinoIcon fontSize="small" />}
+                        {/* {type === 'tv' ? 'TV' : type.charAt(0).toUpperCase() + type.slice(1)} */}
                       </TableCell>
                       <TableCell align="center">{totalRecs}</TableCell>
                       <TableCell align="center">{totalRatings}</TableCell>

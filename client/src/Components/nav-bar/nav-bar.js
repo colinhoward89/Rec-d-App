@@ -177,49 +177,22 @@ export default function PrimarySearchAppBar(handleShowRated) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <NavLink to={`/profile`}>
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            style={{color:'white'}}
-          >
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-      </NavLink>
-      <NavLink to='/friends'>
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="friends"
-            style={{color:'white'}}
-          >
-            <Diversity1Icon />
-          </IconButton>
-          <p>Friends</p>
-        </MenuItem>
-      </NavLink>
       <NavLink to='/recs'>
-        <MenuItem>
+      <MenuItem>
           <IconButton
             size="large"
             aria-label="my-recs"
-            style={{color:'white'}}
           >
             <CallReceivedIcon />
           </IconButton>
           <p>My Recs</p>
-        </MenuItem>
+          </MenuItem>
       </NavLink>
       <NavLink to={`/ratings`}>
         <MenuItem>
           <IconButton
             size="medium"
             aria-label="my-ratings"
-            style={{color:'white'}}
           >
             <StarIcon />
           </IconButton>
@@ -231,7 +204,6 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <IconButton
             size="large"
             aria-label="sent-recs"
-            style={{color:'white'}}
           >
             <ForwardIcon />
           </IconButton>
@@ -243,11 +215,33 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <IconButton
             size="large"
             aria-label="logout"
-            style={{color:'white'}}
           >
             <LogoutIcon />
           </IconButton>
           <p>Logout</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to='/friends'>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="friends"
+          >
+            <Diversity1Icon />
+          </IconButton>
+          <p>Friends</p>
+        </MenuItem>
+      </NavLink>
+      <NavLink to={`/profile`}>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+          >
+            <AccountCircle />
+          </IconButton>
+          <p>Profile</p>
         </MenuItem>
       </NavLink>
     </Menu>
@@ -298,29 +292,8 @@ export default function PrimarySearchAppBar(handleShowRated) {
               <MenuItem onClick={(e) => handleMenuItemClick(e, 5)}><CasinoIcon />&nbsp;&nbsp;Board Games</MenuItem>
             </Menu>
           </Search>
-
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <NavLink to="/profile">
-              <IconButton
-                style={{ marginRight: '0', color:'white'}}
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-              >
-                <AccountCircle />
-              </IconButton>
-            </NavLink>
-            <NavLink to='/friends'>
-              <IconButton
-                size="large"
-                aria-label="friends"
-                style={{color:'white'}}
-              >
-                <Diversity1Icon />
-              </IconButton>
-            </NavLink>
             <NavLink to='/recs'>
               <IconButton
                 size="large"
@@ -346,6 +319,26 @@ export default function PrimarySearchAppBar(handleShowRated) {
                 aria-label="sent-recs"
               >
                 <ForwardIcon />
+              </IconButton>
+            </NavLink>
+            <NavLink to='/friends'>
+              <IconButton
+                size="large"
+                aria-label="friends"
+                style={{color:'white'}}
+              >
+                <Diversity1Icon />
+              </IconButton>
+            </NavLink>
+            <NavLink to="/profile">
+              <IconButton
+                style={{ marginRight: '0', color:'white'}}
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+              >
+                <AccountCircle />
               </IconButton>
             </NavLink>
             <NavLink to='/logout'>
