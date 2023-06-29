@@ -11,6 +11,7 @@ export default function SourceFormDialog() {
   const [newSource, setNewSource] = useState(null);
   const [currentSources, setCurrentSources] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchSources = async () => {
@@ -28,7 +29,10 @@ export default function SourceFormDialog() {
   }, [fetchSourcesComplete]);
 
   const handleClose = () => {
-    setOpen(false);
+    setTimeout(() => {
+      setOpen(false);
+      refreshUser();
+    }, 1500);
   };
 
   const handleChange = (event) => {
@@ -38,11 +42,9 @@ export default function SourceFormDialog() {
   const handleSaveSource = async () => {
     const sourceExists = currentSources.some((source) => source.name === newSource);
     if (sourceExists) {
-      alert('Source already exists');
+      setMessage(`Source already exists!`);
     } else {
       await handleAddToSources({ newSource });
-      refreshUser();
-      handleClose();
     }
   };
 
@@ -50,9 +52,10 @@ export default function SourceFormDialog() {
     const newSourceDetails = { name: newSource, type: 'source' }
     const res = await userService.saveSource(userId, newSourceDetails);
     if (res.error) {
-      alert(`Error: ${res.message}`);
+      setMessage(`Error: ${res.message}`);
     } else {
-      alert("New source saved")
+      setMessage("New source saved!")
+      handleClose();
     }
   };
 
@@ -72,6 +75,9 @@ export default function SourceFormDialog() {
             autoFocus
           />
         </DialogContent>
+        {message && (
+        <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+      )}
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSaveSource}>Save</Button>
