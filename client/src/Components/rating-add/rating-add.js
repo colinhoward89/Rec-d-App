@@ -30,6 +30,7 @@ export default function RatingFormDialog({ rec }) {
   const [options, setOptions] = useState([]);
   const [recExists, setRecExists] = useState(false);
   const [fetchRecipientsComplete, setFetchRecipientsComplete] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchRecipients = async () => {
@@ -58,9 +59,10 @@ export default function RatingFormDialog({ rec }) {
       const recMediaIds = userRecs.map((userRec) => userRec.mediaId);
       const selectedRecIndex = recMediaIds.indexOf(rec.mediaId);
       if (recMediaIds.includes(rec.mediaId)) {
-        const matchingSource = userRecs[selectedRecIndex].source;
+        const matchingSource = userRecs[selectedRecIndex].sources[0].source;
         const match = options.find((option) => option.id === matchingSource)?.name;
         if (match) {
+          console.log(match)
           setExistingSource(match);
         }
         setExistingRecId(userRecs[selectedRecIndex]._id);
@@ -78,7 +80,6 @@ export default function RatingFormDialog({ rec }) {
     setOpen(false);
   };
 
-
   const handleChange = (event) => {
     setRatingComment(event.target.value)
   }
@@ -93,25 +94,30 @@ export default function RatingFormDialog({ rec }) {
     } else {
       handleAddRating({ ...rec });
     }
-    handleClose();
   };
 
   const handleAddRating = async (rec) => {
     const sourceId = source ? source.id : null; // Use null if source doesn't exist
     const res = await recService.saveRating(rec, userId, sourceId, value, ratingComment);
     if (res.error) {
-      alert(`Error: ${res.message}`);
+      setMessage(`Error: ${res.message}`);
     } else {
-      alert("saved to recs")
+      setMessage("Rating saved!")
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
   const handleAddRatingToRec = async (rec) => {
     const res = await recService.updateRating(userId, rec._id, value, ratingComment);
     if (res.error) {
-      alert(`Error: ${res.message}`);
+      setMessage(`Error: ${res.message}`);
     } else {
-      alert("saved to recs")
+      setMessage("Rating saved!")
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
@@ -128,11 +134,13 @@ export default function RatingFormDialog({ rec }) {
         <DialogTitle>Add rating</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            "{rec.title}" by "{rec.author}".
+            <span style={{ fontStyle: 'italic', fontWeight: 'bolder' }}>{rec.title}</span>
           </DialogContentText>
-          {recExists? ( <Typography variant="body1">
-              Recommended by "{existingSource}".
-            </Typography> ) : (
+          {recExists ? (
+            <Typography variant="body1">
+              Rec'd by {existingSource}.
+            </Typography>
+          ) : (
             <Autocomplete
               id="source"
               options={options}
@@ -180,11 +188,20 @@ export default function RatingFormDialog({ rec }) {
             autoFocus
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSaveRating}>Save</Button>
-        </DialogActions>
+        {message ? (
+          <>
+            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSaveRating}>Save</Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
-  );
-}
+  );  
+}  

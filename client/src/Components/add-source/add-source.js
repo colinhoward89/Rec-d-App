@@ -5,7 +5,7 @@ import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogConte
 import { Context } from '../../Context';
 
 export default function SourceFormDialog() {
-  const {currentUser, refreshUser} = useContext(Context);
+  const { currentUser, refreshUser } = useContext(Context);
   const userId = currentUser.id;
   const [open, setOpen] = useState(true);
   const [newSource, setNewSource] = useState(null);
@@ -15,24 +15,22 @@ export default function SourceFormDialog() {
 
   useEffect(() => {
     const fetchSources = async () => {
-        const sources = currentUser.sources;
-        const sourceNamesArray = await Promise.all(
-          sources.map(async (source) => {
-            const sourceName = await userService.getSourceName(source);
-            return { id: source, name: sourceName.name, type: sourceName.type };
-          }))
-        const otherSources = sourceNamesArray.filter((source) => source.type === 'source');
-        setCurrentSources(otherSources);
-        setFetchSourcesComplete(true);
+      const sources = currentUser.sources;
+      const sourceNamesArray = await Promise.all(
+        sources.map(async (source) => {
+          const sourceName = await userService.getSourceName(source);
+          return { id: source, name: sourceName.name, type: sourceName.type };
+        }))
+      const otherSources = sourceNamesArray.filter((source) => source.type === 'source');
+      setCurrentSources(otherSources);
+      setFetchSourcesComplete(true);
     };
     fetchSources();
   }, [fetchSourcesComplete]);
 
   const handleClose = () => {
-    setTimeout(() => {
-      setOpen(false);
-      refreshUser();
-    }, 1500);
+    setOpen(false);
+    refreshUser();
   };
 
   const handleChange = (event) => {
@@ -55,7 +53,9 @@ export default function SourceFormDialog() {
       setMessage(`Error: ${res.message}`);
     } else {
       setMessage("New source saved!")
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
@@ -75,13 +75,19 @@ export default function SourceFormDialog() {
             autoFocus
           />
         </DialogContent>
-        {message && (
-        <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
-      )}
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSaveSource}>Save</Button>
-        </DialogActions>
+        {message ? (
+          <>
+            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSaveSource}>Save</Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );

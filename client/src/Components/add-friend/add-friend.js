@@ -45,10 +45,8 @@ export default function FriendFormDialog() {
   }, [fetchSourcesComplete]);
 
   const handleClose = () => {
-    setTimeout(() => {
-      setOpen(false);
-      refreshUser();
-    }, 1500);
+    setOpen(false);
+    refreshUser();
   };
 
   const handleChange = (event) => {
@@ -80,7 +78,9 @@ export default function FriendFormDialog() {
       }
     } else {
       setMessage('Invitation sent!');
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
@@ -104,13 +104,19 @@ export default function FriendFormDialog() {
             }}
           />
         </DialogContent>
-        {message && (
-        <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
-      )}
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleInviteFriend}>Save</Button>
-        </DialogActions>
+        {message ? (
+          <>
+            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleInviteFriend}>Save</Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );
