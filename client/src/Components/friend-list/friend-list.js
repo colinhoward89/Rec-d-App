@@ -35,6 +35,8 @@ const FriendList = () => {
   const [addSourceSeen, setAddSourceSeen] = useState(false);
   const [recs, setRecs] = useState([]);
 
+console.log(stats)
+
   useEffect(() => {
     getUserRecommendations(userId)
       .catch((e) => console.log(e));
@@ -95,8 +97,16 @@ const FriendList = () => {
           totalRecs: totalRecs + 1,
           totalRatings: typeof rec.rating === 'number' && !isNaN(rec.rating) ? totalRatings + 1 : totalRatings,
           totalScore: typeof rec.rating === 'number' && !isNaN(rec.rating) ? totalScore + rec.rating : totalScore,
-          averageScore: typeof rec.rating === 'number' && !isNaN(rec.rating) ? (totalScore + rec.rating) / (totalRatings + 1) : 0,
+          averageScore: 0,
         };
+      });
+    });
+  
+    Object.keys(statsBySourceAndType).forEach((sourceId) => {
+      Object.keys(statsBySourceAndType[sourceId]).forEach((type) => {
+        const { totalRatings, totalScore } = statsBySourceAndType[sourceId][type];
+        const averageScore = totalRatings > 0 ? totalScore / totalRatings : 0;
+        statsBySourceAndType[sourceId][type].averageScore = averageScore;
       });
     });
   
@@ -128,7 +138,6 @@ function getUserRecommendations(userId) {
     return updatedRecs;
   });
 }
-
 
   const sourcesWithRecs = Object.keys(stats).filter((sourceId) => {
     const sourceStats = stats[sourceId];

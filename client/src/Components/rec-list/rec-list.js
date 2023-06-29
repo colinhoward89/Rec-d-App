@@ -75,35 +75,49 @@ function RecList() {
   }, [fetchSourcesComplete]);
 
   function getUserRecommendations(userId) {
-    return recService.getUserRecs(userId)
-      .then((recs) => {
-        let filteredRecs = recs.filter((rec) => rec.to === userId);
-        filteredRecs = filteredRecs.filter((rec) => !rec.rating);
-        const updatedRecs = filteredRecs.map((rec) => {
-          const ratings = recs.filter((r) => r.source === rec.source && r.type === rec.type && typeof r.rating === 'number' && !isNaN(r.rating)).map((r) => r.rating);
-          if (ratings.length > 0) {
-            const avgRating = ratings.reduce((acc, val) => acc + val) / ratings.length;
-            return { ...rec, avgRating }; // Create new object with updated field
-          } else {
-            return { ...rec, avgRating: 0 };
+    return recService.getUserRecs(userId).then((recs) => {
+      let filteredRecs = recs.filter((rec) => rec.to === userId);
+      let updatedRecs = filteredRecs.map((rec) => {
+        const sources = rec.sources.map((source) => source.source);
+        const ratings = recs
+          .filter(
+            (r) =>
+              r.sources.some((source) => sources.includes(source.source)) &&
+              r.type === rec.type &&
+              typeof r.rating === 'number' &&
+              !isNaN(r.rating)
+          )
+          .map((r) => r.rating);
+        if (ratings.length > 0) {
+          const maxRating = Math.max(...ratings);
+          let avgRating = maxRating;
+          if (ratings.length > 1) {
+            avgRating += 0.5 * (ratings.length - 2);
           }
-        }).filter((rec) => typeof rec.avgRating === 'number');
-
-        // Sort by urgent flag (true first) and then by average rating
-        updatedRecs.sort((a, b) => {
-          if (a.urgent && !b.urgent) {
-            return -1; // a is urgent, b is not urgent
-          } else if (!a.urgent && b.urgent) {
-            return 1; // a is not urgent, b is urgent
-          } else {
-            return b.avgRating - a.avgRating; // sort by average rating
-          }
-        });
-
-        setRecs(updatedRecs);
-        return updatedRecs;
+          return { ...rec, avgRating };
+        } else {
+          return { ...rec, avgRating: null };
+        }
+      }).filter((rec) => rec.avgRating !== null);
+  
+      // Sort by urgent flag (true first) and then by average rating
+      updatedRecs = updatedRecs.filter((rec) => !rec.rating);
+      updatedRecs.sort((a, b) => {
+        if (a.urgent && !b.urgent) {
+          return -1; // a is urgent, b is not urgent
+        } else if (!a.urgent && b.urgent) {
+          return 1; // a is not urgent, b is urgent
+        } else {
+          return b.avgRating - a.avgRating; // sort by average rating
+        }
       });
+      setRecs(updatedRecs);
+      return updatedRecs;
+    });
   }
+  
+  
+  
 
   function toggleRatingPop(rec) {
     setSelectedRec(rec);
