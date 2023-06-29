@@ -20,11 +20,12 @@ export default function SendRecFormDialog({ rec }) {
   const [recipient, setRecipient] = useState(null);
   const [options, setOptions] = useState([]);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchRecipients = async () => {
       const sources = currentUser.sources;
-      if (sources) {      
+      if (sources) {
         const sourceNamesArray = await Promise.all(sources.map(async (source) => {
           const sourceName = await userService.getSourceName(source);
           return { id: source, name: sourceName.name, type: sourceName.type };
@@ -37,7 +38,7 @@ export default function SendRecFormDialog({ rec }) {
     };
     fetchRecipients();
   }, []);
-  
+
 
   const handleClose = () => {
     setOpen(false);
@@ -51,33 +52,15 @@ export default function SendRecFormDialog({ rec }) {
     setRecipient(newValue);
   };
 
-  // const handleSaveRec = () => {
-  //   handleSendRec({ ...rec });
-  //   handleClose();
-  // };
-
-  // const handleSendRec = async (rec) => {
-  //   try {
-  //     const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
-  //     if (res && !res.error) {
-  //       alert("Saved to recs");
-  //     }
-  //   } catch (error) {
-  //     alert(`Error: ${error.message}`);
-  //   }
-  // };
-
   const handleSaveRec = async () => {
-    try {
-      const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
-      if (res && !res.error) {
-        alert('Saved to recs');
+    const res = await recService.saveRec(rec, recipient.id, userId, sourceComment);
+    if (res.error) {
+      setMessage(`Error: ${res.error}`);
+    } else {
+      setMessage("Rec sent!")
+      setTimeout(() => {
         handleClose();
-      }
-      if (res.error)
-      setError(res.error); // Store the error message in state
-    } catch (error) {
-      console.log(error)
+      }, 1500);
     }
   };
 
@@ -86,9 +69,9 @@ export default function SendRecFormDialog({ rec }) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Send rec</DialogTitle>
         <DialogContent>
-        {error && <DialogContentText color="error">{`Error: ${error}`}</DialogContentText>}
+          {error && <DialogContentText color="error">{`Error: ${error}`}</DialogContentText>}
           <DialogContentText>
-            "{rec.title}" by "{rec.author}".
+          <span style={{ fontStyle: 'italic', fontWeight: 'bolder' }}>{rec.title}</span>
           </DialogContentText>
           <Autocomplete
             id="recipient"
@@ -110,10 +93,19 @@ export default function SendRecFormDialog({ rec }) {
             autoFocus
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSaveRec}>Save</Button>
-        </DialogActions>
+        {message ? (
+          <>
+            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSaveRec}>Save</Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );

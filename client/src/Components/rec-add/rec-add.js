@@ -14,6 +14,7 @@ export default function RecFormDialog({ rec }) {
   const [source, setSource] = useState(null);
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchSources = async () => {
@@ -48,15 +49,17 @@ export default function RecFormDialog({ rec }) {
 
   const handleSaveRec = () => {
     handleAddToRecs({ ...rec });
-    handleClose();
   };
 
   const handleAddToRecs = async (rec) => {
     const res = await recService.saveRec(rec, userId, source.id, sourceComment, urgent);
     if (res.error) {
-      alert(`Error: ${res.message}`);
+      setMessage(`Error: ${res.message}`);
     } else {
-      alert("saved to recs")
+      setMessage("Saved to recs!")
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
@@ -66,7 +69,7 @@ export default function RecFormDialog({ rec }) {
         <DialogTitle>Add to recs</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            "{rec.title}" by "{rec.author}".
+          <span style={{ fontStyle: 'italic', fontWeight: 'bolder' }}>{rec.title}</span>
           </DialogContentText>
           <Autocomplete
             id="source"
@@ -103,10 +106,19 @@ export default function RecFormDialog({ rec }) {
               style: { textDecoration: 'none' }}}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSaveRec}>Save</Button>
-        </DialogActions>
+        {message ? (
+          <>
+            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSaveRec}>Save</Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );
