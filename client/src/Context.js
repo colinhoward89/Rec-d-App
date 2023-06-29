@@ -17,7 +17,6 @@ const ContextProvider = ({ children }) => {
     });
 
   const handleGetUser = async () => {
-    console.log("being called")
     if (user) {
       const email = user.email;
       const receivedUser = await userService.getUser(email);
@@ -59,7 +58,6 @@ const ContextProvider = ({ children }) => {
   };
 
   const refreshUser = () => {
-    console.log("refresh user")
     handleGetUser();
   };
 

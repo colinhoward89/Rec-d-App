@@ -6,7 +6,6 @@ const getRecs = async (req, res) => {
   try {
     const userId = req.headers['x-user-id'];
     const userRecs = await recs.find({ to: userId });
-    console.log(userRecs)
     return res.status(200).send(userRecs);
   } catch (error) {
     console.log(error);

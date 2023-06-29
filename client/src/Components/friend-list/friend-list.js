@@ -35,8 +35,6 @@ const FriendList = () => {
   const [addSourceSeen, setAddSourceSeen] = useState(false);
   const [recs, setRecs] = useState([]);
 
-console.log(stats)
-
   useEffect(() => {
     getUserRecommendations(userId)
       .catch((e) => console.log(e));

@@ -25,7 +25,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'center',
+  textAlign: 'left',
   color: 'black',
   fontWeight: 'lighter',
   fontSize: '14px',
@@ -146,8 +146,8 @@ function RatingList() {
                     {isSmallScreen ? (
                       <>
                         <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
-                          <Item><span style={{ fontStyle: 'italic', fontWeight: 'bolder' }}>{rec.title}</span> ({rec.year})</Item>
-                          <Item><span style={{ fontWeight: 'bold' }}>{rec.author}</span></Item>
+                          <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
+                          <Item>{rec.author}</Item>
                         </Stack>
                         {rec.sources.map((source, index) => (
                           <Stack direction="row" key={index}>
@@ -225,7 +225,13 @@ function RatingList() {
                           </p>
                         )}
                         {isSmallScreen && typeof rec.rating === 'number' ? (
-                          <p style={{ display: 'flex', alignItems: 'center', margin: '0' }}>{rec.rating} <StarIcon style={{ verticalAlign: 'middle', color: "orange", marginLeft: '6px' }} /></p>
+                          <Rating
+                              value={rec.rating}
+                              precision={0.5}
+                              emptyIcon={<StarIcon fontSize="20px" />}
+                              readOnly
+                              style={{ fontSize:"20px", margin: '4px 0' }}
+                            />
                         ) : (
                           typeof rec.rating === 'number' && (
                             <Rating
