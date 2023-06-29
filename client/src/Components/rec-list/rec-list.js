@@ -145,7 +145,7 @@ function RecList() {
         <p>No recommendations outstanding</p>
       ) : (
         <TableContainer component={Paper} className={styles.RecList}>
-          <Table sx={{ minWidth: 200 }} aria-label="simple table">
+          <Table sx={{ minWidth: 200, padding: 0 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell colSpan={3} align="center">
@@ -159,7 +159,7 @@ function RecList() {
                   key={rec._id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { padding: '0px 0px' } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" sx={{ padding: '10px' }}>
                     {rec.type === 'book' ? (
                       rec.image ? (
                         <div style={{ paddingLeft: '10px' }}>
@@ -200,6 +200,7 @@ function RecList() {
                       </div>
                     )}
                   </TableCell>
+                  <TableCell sx={{ padding: '0px' }}>
                   {isSmallScreen ? (
                     <>
                       <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
@@ -230,7 +231,8 @@ function RecList() {
                         </Stack>
                       ))}
                     </>
-                  ) : (<TableCell>
+                  ) : (
+                    <>
                     <Stack direction="row" spacing={0} justifyContent="left" alignItems="flex-start">
                       {rec.urgent && (
                         <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
@@ -275,15 +277,16 @@ function RecList() {
                         </Stack>
                       ))}
                     </Stack>
-                  </TableCell>)}
+                    </>
+                  )}
+                  </TableCell>
                   <TableCell sx={{ padding: '0px' }}>
                     <Stack direction="column" alignItems="flex-end" sx={{ paddingRight: '20px' }}>
-                      <Box mb={1.8}>
+                      <p>
                         <Button variant="contained" size="small" style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleUrgentPop(rec)}>
                           <PriorityHighIcon />
                         </Button>
-                      </Box>
-                      <Box mb={1.8}>
+                        </p>
                         <Button
                           variant="contained"
                           size="small"
@@ -291,11 +294,11 @@ function RecList() {
                           onClick={() => toggleRatingPop(rec)}
                         >
                           {isSmallScreen ? 'Rate' : 'Add Rating'}
-                        </Button>
-                      </Box>
+                        </Button><p>
                       <Button variant="contained" size="small" style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleRecPop(rec)}>
                         Rec{!isSmallScreen && 'ommend'}
                       </Button>
+                      </p>
                     </Stack>
                   </TableCell>
                 </TableRow>

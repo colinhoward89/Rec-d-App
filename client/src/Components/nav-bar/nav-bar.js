@@ -67,7 +67,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar(handleShowRated) {
-  const { currentUser } = useContext(Context)
+  const { currentUser, isAuthenticated } = useContext(Context)
   const userId = currentUser?.id;
   const [typeEl, setTypeEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -161,7 +161,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
+  const renderMobileMenu = isAuthenticated ? (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
@@ -178,7 +178,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
       onClose={handleMobileMenuClose}
     >
       <NavLink to='/recs'>
-      <MenuItem>
+        <MenuItem>
           <IconButton
             size="large"
             aria-label="my-recs"
@@ -186,7 +186,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
             <CallReceivedIcon />
           </IconButton>
           <p>My Recs</p>
-          </MenuItem>
+        </MenuItem>
       </NavLink>
       <NavLink to={`/ratings`}>
         <MenuItem>
@@ -245,9 +245,10 @@ export default function PrimarySearchAppBar(handleShowRated) {
         </MenuItem>
       </NavLink>
     </Menu>
-  );
+  ) : null;  
 
   return (
+    isAuthenticated && (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
@@ -368,5 +369,6 @@ export default function PrimarySearchAppBar(handleShowRated) {
       {renderMobileMenu}
       {renderMenu}
     </Box >
+  )
   );
 }
