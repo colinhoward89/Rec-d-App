@@ -60,10 +60,12 @@ const Profile = () => {
                 <Button onClick={handleSaveUsername}>Save</Button>
               </>
             ) : (
-              <>
-                <h2>{currentUser.name}</h2>
-                  <Button onClick={handleEditUsername}>Edit Username</Button>
-              </>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h2 style={{ marginRight: '10px' }}>{currentUser.name}</h2>
+                <Button variant="outlined" onClick={handleEditUsername}>
+                  Edit Username
+                </Button>
+              </div>
             )}
           </div>
           {/* <p>Friend Requests: {currentUser.requestRec.length}</p> */}
