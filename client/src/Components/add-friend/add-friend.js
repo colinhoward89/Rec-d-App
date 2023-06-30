@@ -14,6 +14,7 @@ export default function FriendFormDialog() {
   const [currentRequestSents, setCurrentRequestSents] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchSources = async () => {
@@ -51,37 +52,56 @@ export default function FriendFormDialog() {
 
   const handleChange = (event) => {
     setNewFriend(event.target.value);
+    setErrorMessage('');
   }
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleInviteFriend();
+    }
+  };
 
   const handleInviteFriend = async () => {
     const sourceExists = currentSources.some((source) => source.email === newFriend);
     const requestRecExists = currentRequestRecs.some((requestRec) => requestRec.email === newFriend);
     const requestSentExists = currentRequestSents.some((requestSent) => requestSent.email === newFriend);
     if (sourceExists) {
-      setMessage(`You're already friends!`);
+      setErrorMessage(`You're already friends!`);
     } else if (requestRecExists) {
-      setMessage(`They've added you already!`);
+      setErrorMessage(`They've added you already!`);
     } else if (requestSentExists) {
-      setMessage(`Request already sent!`);
+      setErrorMessage(`Request already sent!`);
     } else {
       await handleFriendInvitation(newFriend);
     }
   };
 
   const handleFriendInvitation = async () => {
+    if (isValidEmail(newFriend)) {
     const res = await userService.inviteFriend(userId, newFriend);
     if (res.error) {
       if (res.message === 'User not found') {
-        setMessage(`User not found. Please get them to sign up! Direct invitations from Rec'd coming soon...`);
+        setErrorMessage(`User not found. Please get them to sign up! Direct invitations from Rec'd coming soon...`);
       } else {
-        setMessage(`Error: ${res.message}`);
+        setErrorMessage(`Error: ${res.message}`);
       }
     } else {
       setMessage('Invitation sent!');
+      setNewFriend('');
+      setErrorMessage('');
       setTimeout(() => {
         handleClose();
       }, 1500);
     }
+    } else {
+      setErrorMessage('Please enter a valid email address.');
+    }
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -89,13 +109,14 @@ export default function FriendFormDialog() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle id="dialog-title">Add by Email</DialogTitle>
         <DialogContent>
-          <TextField
+        <TextField
             id="friend"
             label="Add Friend"
             multiline
             rows={1}
             value={newFriend}
             onChange={handleChange}
+            onKeyPress={handleKeyPress}
             fullWidth
             autoFocus
             InputProps={{
@@ -103,7 +124,10 @@ export default function FriendFormDialog() {
               type: 'email',
               'aria-describedby': 'friend-helper-text',
             }}
-            helperText="Enter the email address of the friend you want to add."
+            helperText={
+              errorMessage !== '' ? errorMessage : 'Enter the email address of the friend you want to add.'
+            }
+            error={errorMessage !== ''}
           />
         </DialogContent>
         {message ? (
