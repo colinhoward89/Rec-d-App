@@ -33,15 +33,6 @@ const Item = styled(Paper)(({ theme }) => ({
   margin: '3px',
 }));
 
-const StyledRating = styled(Rating)({
-  iconFilled: {
-    color: 'currentColor',
-  },
-  iconEmpty: {
-    opacity: 0.55,
-  },
-});
-
 function RatingList() {
   const { currentUser } = useContext(Context);
   const userId = currentUser.id;

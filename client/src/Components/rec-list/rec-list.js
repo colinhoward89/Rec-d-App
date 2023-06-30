@@ -18,7 +18,7 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { Context } from '../../Context';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -75,6 +75,7 @@ function RecList() {
   function getUserRecommendations(userId) {
     return recService.getUserRecs(userId).then((recs) => {
       let filteredRecs = recs.filter((rec) => rec.to === userId);
+      console.log(filteredRecs)
       let updatedRecs = filteredRecs.map((rec) => {
         const sources = rec.sources.map((source) => source.source);
         const ratings = recs
@@ -94,7 +95,7 @@ function RecList() {
           }
           return { ...rec, avgRating };
         } else {
-          return { ...rec, avgRating: null };
+          return { ...rec, avgRating: 0 };
         }
       }).filter((rec) => rec.avgRating !== null);
 

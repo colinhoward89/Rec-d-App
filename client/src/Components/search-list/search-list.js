@@ -20,13 +20,20 @@ import RatingFormDialog from '../rating-add/rating-add';
 import SendRecFormDialog from '../rec-send/rec-send';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { createTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'center',
+  textAlign: 'left',
   color: 'black',
+  fontWeight: 'lighter',
+  fontSize: '14px',
+  padding: '5px',
+  margin: '3px',
 }));
 
 function SearchList() {
@@ -36,6 +43,10 @@ function SearchList() {
   const [recSeen, setRecSeen] = useState(false);
   const [sendRecSeen, setSendRecSeen] = useState(false);
   const [ratingSeen, setRatingSeen] = useState(false);
+  const smallButtonWidth = 50;
+  const buttonWidth = 120;
+  const theme = createTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (searchtype === 'music') {
@@ -138,40 +149,97 @@ function SearchList() {
   return (
     <>
       <TableContainer component={Paper} className={styles.SearchList}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 200, padding: 0 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell colSpan={3} align="center">
+                <Box sx={{ color: 'white', width: 1, border: 1, bgcolor: '#1976d2' }}> Search Results</Box>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {searchResults.map((rec) => (
               <TableRow
                 key={rec.mediaId}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { padding: '0px 0px' } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" sx={{ padding: '10px' }}>
                   {rec.type === 'book' ? (
                     rec.image ? (
-                      <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
+                      <div style={{ paddingLeft: '10px' }}>
+                        <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
+                      </div>
                     ) : (
-                      <img src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg" alt={rec.title} style={{ width: '100px', height: '100px' }} />
+                      <div style={{ paddingLeft: '10px' }}>
+                        <img
+                          src="https://st.depositphotos.com/1815808/1437/i/600/depositphotos_14371949-stock-photo-old-books-background.jpg"
+                          alt={rec.title}
+                          style={{ width: '100px', height: '100px' }}
+                        />
+                      </div>
                     )
                   ) : rec.type === 'video' ? (
-                    <img src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png" alt={rec.title} style={{ width: '100px', height: 'auto' }} />
+                    <div style={{ paddingLeft: '10px' }}>
+                      <img
+                        src="https://cdn.pixabay.com/photo/2016/06/29/14/17/joystick-1486908_640.png"
+                        alt={rec.title}
+                        style={{ width: '100px', height: 'auto' }}
+                      />
+                    </div>
                   ) : rec.type === 'board' ? (
-                    <img src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg" alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                    <div style={{ paddingLeft: '10px' }}>
+                      <img
+                        src="https://www.ageukmobility.co.uk/media/cache/default_530/upload/62/48/624887001a83bfa9e086aab9090cff8c8b51f234.jpeg"
+                        alt={rec.title}
+                        style={{ width: 'auto', height: '100px' }}
+                      />
+                    </div>
                   ) : rec.type === 'movie' || rec.type === 'tv' ? (
-                    <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
-                  ) : <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }}/>}
+                    <div style={{ paddingLeft: '10px' }}>
+                      <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                    </div>
+                  ) : (
+                    <div style={{ paddingLeft: '10px' }}>
+                      <img src={rec.image} alt={rec.title} style={{ width: 'auto', height: '100px' }} />
+                    </div>
+                  )}
                 </TableCell>
-                <TableCell><Stack direction="column" spacing={1} justifyContent="left" alignItems="flex-start"><Item>{rec.title}</Item><Item>{rec.author}</Item><Item>{rec.year}</Item></Stack></TableCell>
-                <TableCell>
-                  <Button variant="contained" onClick={() => toggleRecPop(rec)}>Add to recs</Button><p></p>
-                  <Button variant="contained" onClick={() => toggleRatingPop(rec)}>&nbsp;Add rating&nbsp;</Button><p></p>
-                  <Button variant="contained" onClick={() => toggleSendRecPop(rec)}>Recommend</Button>
+                <TableCell sx={{ padding: '0px' }}>
+                  {isSmallScreen ? (
+                    <>
+                      <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
+                        <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
+                        <Item>{rec.author}</Item>
+                      </Stack>
+                    </>
+                  ) : (
+                    <>
+                      <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
+                        <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
+                        <Item>{rec.author}</Item>
+                      </Stack>
+                    </>
+                  )}
+                </TableCell>
+                <TableCell sx={{ padding: '0px' }}>
+                  <Stack direction="column" alignItems="flex-end" sx={{ paddingRight: '20px' }}>
+                    <p>
+                      <Button variant="contained" size="small" style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleRecPop(rec)}>
+                        Add{!isSmallScreen && ' to Recs'}
+                      </Button>
+                    </p>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }}
+                      onClick={() => toggleRatingPop(rec)}
+                    >
+                      {isSmallScreen ? 'Rate' : 'Add Rating'}
+                    </Button>
+                    <p>
+                      <Button variant="contained" size='small'style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleSendRecPop(rec)}>Rec{!isSmallScreen && 'ommend'}</Button>
+                    </p>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}

@@ -45,7 +45,7 @@ const Profile = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}> {/* Wrap your component with ThemeProvider */}
+    <ThemeProvider theme={theme}>
       {isAuthenticated && (
         <div>
           {/* <img src={user.picture} alt={user.name} /> */}
@@ -66,7 +66,7 @@ const Profile = () => {
               </>
             )}
           </div>
-          <p>Friend Requests: {currentUser.requestRec.length}</p>
+          {/* <p>Friend Requests: {currentUser.requestRec.length}</p> */}
         </div>
       )}
     </ThemeProvider>
