@@ -1,7 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from '@mui/material';
-import { Context } from '../../Context';
-import React, { useContext } from 'react';;
+import React from 'react';;
 
 const Login = () => {
   const { loginWithRedirect } = useAuth0();
@@ -14,7 +13,24 @@ const Login = () => {
     });
   };
 
-  return <Button variant="outlined" className="form-submit" onClick={() => handleLogin()}>Log In</Button>;
+  return (
+    <Button
+      variant="outlined"
+      sx={{
+        color: 'white',
+        borderColor: 'white',
+        borderWidth: '2px',
+        fontWeight: 'bold',
+        '&:hover': {
+          borderColor: 'silver',
+          borderWidth: '3px',
+        },
+      }}
+      onClick={() => handleLogin()}
+    >
+      Log In
+    </Button>
+  );
 };
 
 export default Login;

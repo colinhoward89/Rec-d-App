@@ -25,37 +25,40 @@ const LandingPage = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-
   return (
     <div className={styles.LandingPage}>
       <div className={styles.container}>
-        <div className={styles.leftContainer}>
-          <div className={styles.textLine}>
-            <h2>Find your next favourite <span style={{ color: 'red' }}>{text[0]}</span> faster!</h2>
+        <div className={styles.topContainer}>
+        <img src="recdlogoround.png" alt="Rec'd Logo" style={{ width: '200px', height: 'auto' }} />
+        </div>
+        <div className={styles.descriptionContainer}>
+          <div className={`${styles.leftContainer} ${styles.containerItem}`}>
+            <div className={styles.textLine}>
+            Your essential app for tracking your recommendations in music, movies, TV shows, books, and games.
+            </div>
+            <div className={styles.textLine}>
+            Discover and enjoy effortlessly. Rate your recs, and let Rec'd choose your next favourite!
+            </div>
           </div>
-          <div className={styles.textLine}>
-            <h2>Receive <span style={{ color: 'red' }}>{text[1]}</span> recs from friends</h2>
-          </div>
-          <div className={styles.textLine}>
-            <h2><span style={{ color: 'red' }}>{text[2]}</span> your rec and give it a rating</h2>
+          <div className={`${styles.rightContainer} ${styles.containerItem}`}>
+            <div className={styles.videoContainer}>
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/RecdvideoID"
+                title="Rec'd in action"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
         </div>
-        <div className={styles.rightContainer}>
-          <div className={styles.videoContainer}>
-            <iframe
-              width="560"
-              height="315"
-              src="https://www.youtube.com/embed/RecdvideoID"
-              title="Rec'd in action"
-              frameBorder="0"
-              allowFullScreen
-            ></iframe>
+        <div className={styles.bottomContainer}>
+          <h1 className={styles.bottomText}>What are you waiting for? Get Rec'd today!</h1>
+          <div>
+          <Login />
           </div>
         </div>
-      </div>
-      <div className={styles.bottomContainer}>
-        <h1>What are you waiting for? Get Rec'd today!</h1>
-        <Login />
       </div>
     </div>
   );
