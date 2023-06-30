@@ -9,12 +9,12 @@ const Logout = () => {
 
   return (
         <div>
-      <h2>Are you sure you want to log out?</h2>
+      <h2 style={{ color: 'white' }}>Are you sure you want to log out?</h2>
       <Button variant="contained" className="confirm-btn"
         onClick={() => {
           navigate(`/recs`);
         }}>No</Button>
-    <Button onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000/' } })}>
+    <Button variant="contained" onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000/' } })}>
       Yes
     </Button>
     </div>

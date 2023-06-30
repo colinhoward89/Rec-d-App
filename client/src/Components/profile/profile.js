@@ -49,7 +49,7 @@ const Profile = () => {
       {isAuthenticated && (
         <div>
           {/* <img src={user.picture} alt={user.name} /> */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}>
             {editingUsername ? (
               <>
                 <input
@@ -62,7 +62,7 @@ const Profile = () => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <h2 style={{ marginRight: '10px' }}>{currentUser.name}</h2>
-                <Button variant="outlined" onClick={handleEditUsername}>
+                <Button variant="contained" onClick={handleEditUsername}>
                   Edit Username
                 </Button>
               </div>

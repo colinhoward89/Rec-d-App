@@ -210,17 +210,6 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>Sent Recs</p>
         </MenuItem>
       </NavLink>
-      <NavLink to='/logout'>
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="logout"
-          >
-            <LogoutIcon />
-          </IconButton>
-          <p>Logout</p>
-        </MenuItem>
-      </NavLink>
       <NavLink to='/friends'>
         <MenuItem>
           <IconButton
@@ -244,6 +233,17 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>Profile</p>
         </MenuItem>
       </NavLink>
+      <NavLink to='/logout'>
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="logout"
+          >
+            <LogoutIcon />
+          </IconButton>
+          <p>Logout</p>
+        </MenuItem>
+      </NavLink>
     </Menu>
   ) : null;  
 
@@ -252,14 +252,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            Rec'd
-          </Typography>
+        <img src="recdlogoround.png" alt="Rec'd Logo" style={{ width: '100px', height: 'auto' }} />
           <Search onSubmit={handleSubmit}>
             <SearchIconWrapper>
               <SearchIcon />

@@ -85,9 +85,9 @@ export default function FriendFormDialog() {
   };
 
   return (
-    <div>
+    <section>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add by Email</DialogTitle>
+        <DialogTitle id="dialog-title">Add by Email</DialogTitle>
         <DialogContent>
           <TextField
             id="friend"
@@ -101,7 +101,9 @@ export default function FriendFormDialog() {
             InputProps={{
               style: { width: '400px' },
               type: 'email',
+              'aria-describedby': 'friend-helper-text',
             }}
+            helperText="Enter the email address of the friend you want to add."
           />
         </DialogContent>
         {message ? (
@@ -113,11 +115,13 @@ export default function FriendFormDialog() {
           </>
         ) : (
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose} autoFocus>
+              Cancel
+            </Button>
             <Button onClick={handleInviteFriend}>Save</Button>
           </DialogActions>
         )}
       </Dialog>
-    </div>
+    </section>
   );
 }
