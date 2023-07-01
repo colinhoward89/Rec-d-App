@@ -91,7 +91,7 @@ function RatingList() {
   return (
     <>
       {recs.length === 0 ? (
-        <p>No ratings added</p>
+        <p style={{ fontWeight: "bold", color: "white" }}>No ratings added</p>
       ) : (
         <TableContainer component={Paper} className={styles.RecList}>
           <Table sx={{ minWidth: 200, padding: 0 }} aria-label="simple table">

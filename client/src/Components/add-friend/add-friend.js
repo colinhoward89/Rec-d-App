@@ -88,7 +88,6 @@ export default function FriendFormDialog() {
       }
     } else {
       setMessage('Invitation sent!');
-      setNewFriend('');
       setErrorMessage('');
       setTimeout(() => {
         handleClose();

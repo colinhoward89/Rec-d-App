@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './firstvisit.module.css';
 import { useContext } from "react";
 import { Context } from "../../Context"
+import Button from '@mui/material/Button';
 
 export default function FirstVisit() {
   const { handleCreateUser, user } = useContext(Context);
@@ -18,7 +18,7 @@ export default function FirstVisit() {
   return (
     <div className="first-visit-container">
       <div className="first-visit-header-container">
-        <div>
+        <div style={{ fontWeight: "bold", color: "white" }}>
           <h2 className="fist-visit-header">
             Create a display name
           </h2>
@@ -30,12 +30,11 @@ export default function FirstVisit() {
           onSubmit={handleSubmit}
         >
           <div className="first">
-            <div className=" ">
+            <div style={{ fontWeight: "bold", color: "white" }}>
               <label
                 htmlFor="first-name"
                 className="first-name-first-name"
               >
-                Display name
               </label>
               <input
                 id="first-name"
@@ -47,14 +46,14 @@ export default function FirstVisit() {
               />
             </div>
           </div>
-
+<p></p>
           <div className="first-visit-submit-button">
-            <button
+            <Button style={{ backgroundColor: 'white', color: '#1876D1', fontWeight: 'bold' }} variant="contained"
               type="submit"
               className="submit-button"
             >
               Submit
-            </button>
+            </Button>
           </div>
         </form>
       </div>

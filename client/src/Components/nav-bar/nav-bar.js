@@ -177,7 +177,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <NavLink to='/recs'>
+      <NavLink to={'/recs'}>
         <MenuItem>
           <IconButton
             size="large"
@@ -210,7 +210,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>Sent Recs</p>
         </MenuItem>
       </NavLink>
-      <NavLink to='/friends'>
+      <NavLink to={'/friends'}>
         <MenuItem>
           <IconButton
             size="large"
@@ -233,7 +233,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
           <p>Profile</p>
         </MenuItem>
       </NavLink>
-      <NavLink to='/logout'>
+      <NavLink to={'/logout'}>
         <MenuItem>
           <IconButton
             size="large"
@@ -288,7 +288,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <NavLink to='/recs'>
+            <NavLink to={'/recs'}>
               <IconButton
                 size="large"
                 aria-label="my-recs"
@@ -315,7 +315,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
                 <ForwardIcon />
               </IconButton>
             </NavLink>
-            <NavLink to='/friends'>
+            <NavLink to={'/friends'}>
               <IconButton
                 size="large"
                 aria-label="friends"
@@ -335,7 +335,7 @@ export default function PrimarySearchAppBar(handleShowRated) {
                 <AccountCircle />
               </IconButton>
             </NavLink>
-            <NavLink to='/logout'>
+            <NavLink to={'/logout'}>
               <IconButton
                 size="large"
                 aria-label="logout"

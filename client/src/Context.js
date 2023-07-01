@@ -31,10 +31,10 @@ const ContextProvider = ({ children }) => {
           requestRec: receivedUser[0].requestRec,
         });
       } else {
-        setCurrentUser(null); // Set currentUser to null if receivedUser is not found
+        setCurrentUser(null);
       }
     } else {
-      setCurrentUser(null); // Set currentUser to null if email is empty
+      setCurrentUser(null);
     }
   };
 
@@ -61,31 +61,6 @@ const ContextProvider = ({ children }) => {
     handleGetUser();
   };
 
-  // const handleUpdateUser = async (updatedUser) => {
-  //   const receivedUser = await userService.updateUser({
-  //     id: currentUser.id,
-  //     email: updatedUser.email === '' ? currentUser.email : updatedUser.email,
-  //     name: updatedUser.name === currentUser.name ? currentUser.name : updatedUser.name,
-  //   });
-
-
-  //   if (receivedUser) {
-  //     setCurrentUser({
-  //       ...currentUser,
-  //       email: receivedUser.email,
-  //       name: receivedUser.name,
-  //       sources: receivedUser.sources,
-  //       type: receivedUser.type,
-  //       id: receivedUser._id,
-  //     });
-  //   }
-  // };
-
-  // const authContextValue = {
-  //   currentUser,
-  //   isAuthenticated,
-  //   handleGetUser,
-  // };
   const contextValue = {
     user,
     currentUser,
@@ -94,7 +69,6 @@ const ContextProvider = ({ children }) => {
     handleGetUser,
     handleCreateUser,
     refreshUser,
-    // handleUpdateUser,
     isLoading,
   };
 

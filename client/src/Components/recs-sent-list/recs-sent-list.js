@@ -85,7 +85,7 @@ function RecSentList() {
   return (
     <>
       {recs.length === 0 ? (
-        <p>No recommendations sent</p>
+        <p style={{ fontWeight: "bold", color: "white" }}>No recommendations sent</p>
       ) : (
         <TableContainer component={Paper} className={styles.RecList}>
           <Table sx={{ minWidth: 200, padding: 0 }} aria-label="simple table">

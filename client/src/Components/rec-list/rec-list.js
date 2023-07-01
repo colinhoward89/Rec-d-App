@@ -41,7 +41,6 @@ function RecList() {
   const [options, setOptions] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [selectedRec, setSelectedRec] = useState(null);
-  const [loading, setLoading] = useState(true);
   const smallButtonWidth = 50;
   const buttonWidth = 120;
   const theme = createTheme();
@@ -64,9 +63,9 @@ function RecList() {
         );
         setOptions(sourceNamesArray);
         setFetchSourcesComplete(true);
-        setLoading(false);
+
       } else {
-        console.log('No user info found 😞');
+        console.log('No user sources found 😞');
       }
     };
     fetchSources();
@@ -75,7 +74,6 @@ function RecList() {
   function getUserRecommendations(userId) {
     return recService.getUserRecs(userId).then((recs) => {
       let filteredRecs = recs.filter((rec) => rec.to === userId);
-      console.log(filteredRecs)
       let updatedRecs = filteredRecs.map((rec) => {
         const sources = rec.sources.map((source) => source.source);
         const ratings = recs
@@ -140,10 +138,8 @@ function RecList() {
 
   return (
     <>
-      {loading ? (
-        <p className={styles.p}>Loading...</p>
-      ) : recs.length === 0 ? (
-        <p>No recommendations outstanding</p>
+      {recs.length == 0 ? (
+        <p style={{ fontWeight: "bold", color: "white" }}>No recommendations outstanding</p>
       ) : (
         <TableContainer component={Paper} className={styles.RecList}>
           <Table sx={{ minWidth: 200, padding: 0 }} aria-label="simple table">
