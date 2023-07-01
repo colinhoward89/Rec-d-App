@@ -62,7 +62,7 @@ const Profile = () => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <h2 style={{ marginRight: '10px' }}>{currentUser.name}</h2>
-                <Button variant="contained" onClick={handleEditUsername}>
+                <Button style={{ backgroundColor: 'white', color: '#1876D1', fontWeight: 'bold' }} variant="contained" onClick={handleEditUsername}>
                   Edit Username
                 </Button>
               </div>
