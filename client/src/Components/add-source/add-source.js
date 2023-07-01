@@ -9,9 +9,12 @@ export default function SourceFormDialog() {
   const userId = currentUser.id;
   const [open, setOpen] = useState(true);
   const [newSource, setNewSource] = useState(null);
+  const [error, setError] = useState(false);
+  const maxLength = 40;
   const [currentSources, setCurrentSources] = useState([]);
   const [fetchSourcesComplete, setFetchSourcesComplete] = useState(false);
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const fetchSources = async () => {
@@ -34,15 +37,25 @@ export default function SourceFormDialog() {
   };
 
   const handleChange = (event) => {
-    setNewSource(event.target.value);
-  }
+    const inputValue = event.target.value;
+    setNewSource(inputValue);
+    if (inputValue.length > maxLength) {
+      setErrorMessage(`Max ${maxLength} charactrers`);
+    } else {
+      setErrorMessage('');
+    }
+  };
 
   const handleSaveSource = async () => {
-    const sourceExists = currentSources.some((source) => source.name === newSource);
-    if (sourceExists) {
-      setMessage(`Source already exists!`);
+    if (newSource.length > maxLength) {
+      setErrorMessage('Too many characters!')
     } else {
-      await handleAddToSources({ newSource });
+      const sourceExists = currentSources.some((source) => source.name === newSource);
+      if (sourceExists) {
+        setErrorMessage(`Source already exists!`);
+      } else {
+        await handleAddToSources({ newSource });
+      }
     }
   };
 
@@ -50,7 +63,7 @@ export default function SourceFormDialog() {
     const newSourceDetails = { name: newSource, type: 'source' }
     const res = await userService.saveSource(userId, newSourceDetails);
     if (res.error) {
-      setMessage(`Error: ${res.message}`);
+      setErrorMessage(`Error: ${res.message}`);
     } else {
       setMessage("New source saved!")
       setTimeout(() => {
@@ -59,36 +72,51 @@ export default function SourceFormDialog() {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSaveSource();
+    }
+  };
+
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add source</DialogTitle>
-        <DialogContent>
-          <TextField
-            id="source"
-            label="Add Source"
-            multiline
-            rows={1}
-            value={newSource}
-            onChange={handleChange}
-            fullWidth
-            autoFocus
-          />
-        </DialogContent>
-        {message ? (
-          <>
-            <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
-            <DialogActions>
-              <Button onClick={handleClose}>Close</Button>
-            </DialogActions>
-          </>
-        ) : (
+    <section>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
+      <DialogTitle id="dialog-title">Add source</DialogTitle>
+      <DialogContent>
+        <TextField
+          id="source"
+          label="Add Source"
+          rows={1}
+          value={newSource}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
+          fullWidth
+          autoFocus
+          InputProps={{
+            style: { width: '400px' },
+            'aria-describedby': 'source-helper-text',
+          }}
+          helperText={
+            errorMessage !== '' ? errorMessage : 'Enter the email address of the friend you want to add.'
+          }
+          error={errorMessage !== ''}
+        />
+      </DialogContent>
+      {message ? (
+        <>
+          <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSaveSource}>Save</Button>
+            <Button onClick={handleClose}>Close</Button>
           </DialogActions>
-        )}
-      </Dialog>
-    </div>
+        </>
+      ) : (
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>Cancel</Button>
+          <Button onClick={handleSaveSource}>Save</Button>
+        </DialogActions>
+      )}
+    </Dialog>
+    </section>
   );
 }

@@ -106,13 +106,12 @@ export default function FriendFormDialog() {
 
   return (
     <section>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
         <DialogTitle id="dialog-title">Add by Email</DialogTitle>
         <DialogContent>
         <TextField
             id="friend"
             label="Add Friend"
-            multiline
             rows={1}
             value={newFriend}
             onChange={handleChange}
