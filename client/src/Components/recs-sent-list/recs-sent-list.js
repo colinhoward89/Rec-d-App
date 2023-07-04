@@ -103,7 +103,7 @@ function RecSentList() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { padding: '0px 0px' } }}
                 >
                   <TableCell component="th" scope="row" sx={{ padding: '10px' }}>
-                  {rec.type === 'book' ? (
+                    {rec.type === 'book' ? (
                       rec.image ? (
                         <div style={{ paddingLeft: '10px' }}>
                           <img src={rec.image} alt={rec.title} style={{ width: '100px', height: '100px' }} />
@@ -147,8 +147,15 @@ function RecSentList() {
                     {isSmallScreen ? (
                       <>
                         <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
-                          <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
-                          <Item>{rec.author}</Item>
+                          <>
+                            {rec.title && (
+                              <Item>
+                                <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                                {rec.year && ` (${rec.year})`}
+                              </Item>
+                            )}
+                            {rec.author && <Item>{rec.author}</Item>}
+                          </>
                         </Stack>
                         {rec.sources
                           .filter((source) => source.source === userId)
@@ -183,8 +190,15 @@ function RecSentList() {
                             {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
                             {rec.type === 'board' && <CasinoIcon fontSize="" />}
                           </Item>
-                          <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
-                          <Item>{rec.author}</Item>
+                          <>
+                            {rec.title && (
+                              <Item>
+                                <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                                {rec.year && ` (${rec.year})`}
+                              </Item>
+                            )}
+                            {rec.author && <Item>{rec.author}</Item>}
+                          </>
                         </Stack>
                         <Stack direction="column">
                           {rec.sources
@@ -200,10 +214,10 @@ function RecSentList() {
                                 {source.sourceComment && (
                                   <Item style={{ display: 'flex', alignItems: 'center', height: '20px' }}>
                                     <p>
-                                    <span className="tooltip">
-                                      <ChatBubbleOutlineIcon />
-                                      <span className="tooltiptext">{source.sourceComment}</span>
-                                    </span>
+                                      <span className="tooltip">
+                                        <ChatBubbleOutlineIcon />
+                                        <span className="tooltiptext">{source.sourceComment}</span>
+                                      </span>
                                     </p>
                                   </Item>
                                 )}

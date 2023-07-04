@@ -208,19 +208,26 @@ function SearchList() {
                   {isSmallScreen ? (
                     <>
                       <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
-                        <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
-                        <Item>{rec.author}</Item>
+                        <Item>
+                          <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                          {rec.year && `(${rec.year})`}
+                        </Item>
+                        {rec.author && <Item>{rec.author}</Item>}
                       </Stack>
                     </>
                   ) : (
                     <>
                       <Stack direction="column" spacing={0} justifyContent="left" alignItems="flex-start">
-                        <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
-                        <Item>{rec.author}</Item>
+                        <Item>
+                          <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                          {rec.year && ` (${rec.year})`}
+                        </Item>
+                        {rec.author && <Item>{rec.author}</Item>}
                       </Stack>
                     </>
                   )}
                 </TableCell>
+
                 <TableCell sx={{ padding: '0px' }}>
                   <Stack direction="column" alignItems="flex-end" sx={{ paddingRight: '20px' }}>
                     <p>
@@ -237,7 +244,7 @@ function SearchList() {
                       {isSmallScreen ? 'Rate' : 'Add Rating'}
                     </Button>
                     <p>
-                      <Button variant="contained" size='small'style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleSendRecPop(rec)}>Rec{!isSmallScreen && 'ommend'}</Button>
+                      <Button variant="contained" size='small' style={{ width: isSmallScreen ? smallButtonWidth : buttonWidth }} onClick={() => toggleSendRecPop(rec)}>Rec{!isSmallScreen && 'ommend'}</Button>
                     </p>
                   </Stack>
                 </TableCell>

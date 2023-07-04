@@ -206,8 +206,15 @@ function RecList() {
                             <PriorityHighIcon />
                           </Item>
                         )}
-                        <Item><span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span> ({rec.year})</Item>
-                        <Item>{rec.author}</Item>
+                          <>
+                            {rec.title && (
+                              <Item>
+                                <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                                {rec.year && ` (${rec.year})`}
+                              </Item>
+                            )}
+                            {rec.author && <Item>{rec.author}</Item>}
+                          </>
                       </Stack>
                       {rec.sources.map((source, index) => (
                         <Stack direction="row" key={index}>
@@ -244,8 +251,15 @@ function RecList() {
                         {rec.type === 'video' && <VideogameAssetIcon fontSize="" />}
                         {rec.type === 'board' && <CasinoIcon fontSize="" />}
                       </Item>
-                      <Item><span style={{ fontWeight: 'bold', fontStyle: 'italic' }}>{rec.title}</span> ({rec.year})</Item>
-                      <Item>{rec.author}</Item>
+                      <>
+                            {rec.title && (
+                              <Item>
+                                <span style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{rec.title}</span>
+                                {rec.year && ` (${rec.year})`}
+                              </Item>
+                            )}
+                            {rec.author && <Item>{rec.author}</Item>}
+                          </>
                     </Stack>
                     <Stack direction="column">
                       {rec.sources.map((source, index) => (

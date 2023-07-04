@@ -93,12 +93,13 @@ export default function SourceFormDialog() {
           onKeyPress={handleKeyPress}
           fullWidth
           autoFocus
+          autoComplete='off'
           InputProps={{
             style: { width: '400px' },
             'aria-describedby': 'source-helper-text',
           }}
           helperText={
-            errorMessage !== '' ? errorMessage : 'Enter the email address of the friend you want to add.'
+            errorMessage !== '' ? errorMessage : 'Enter the name of the source you want to add.'
           }
           error={errorMessage !== ''}
         />

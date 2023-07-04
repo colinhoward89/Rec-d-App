@@ -45,7 +45,7 @@ const LandingPage = () => {
               <iframe
                 width="560"
                 height="315"
-                src="https://www.youtube.com/embed/RecdvideoID"
+                src="https://www.youtube-nocookie.com/embed/oOLmiVmtHcM?autoplay=1&loop=1&amp;modestbrading=1&amp;mute=1"
                 title="Rec'd in action"
                 frameBorder="0"
                 allowFullScreen
