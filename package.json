@@ -4,7 +4,11 @@
   "description": "Entertainment recommendations tracker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "cd client && npm i . && cd ../server && npm i .",
+    "server": "npx ts-node server/index.js",
+    "client": "cd client && npm start && cd .. ",
+    "start:server-client": "concurrently \"npm run server\" \"npm run client \""
   },
   "author": "Colin Howard",
   "license": "ISC",
@@ -15,5 +19,8 @@
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
   }
 }
