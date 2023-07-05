@@ -7,13 +7,16 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { ContextProvider } from "./Context";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const url = process.env.REACT_APP_AUTH0_REDIRECT_URI || "http://localhost:3000/home";
+
 root.render(
   <React.StrictMode>
     <Auth0Provider
       domain="rec-d.uk.auth0.com"
       clientId="TS1WV9zdKs1idZTC0dqjQ0k4wvsU24Gu"
       authorizationParams={{
-        redirect_uri: "http://localhost:3000/home"
+        redirect_uri: url,
       }}
     >
       <ContextProvider>
