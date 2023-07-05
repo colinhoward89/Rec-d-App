@@ -8,7 +8,7 @@ import { ContextProvider } from "./Context";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const url = process.env.REACT_APP_AUTH0_REDIRECT_URI || "http://localhost:3000/home";
+const url = process.env.REACT_APP_AUTH0_REDIRECT_URI;
 
 root.render(
   <React.StrictMode>
