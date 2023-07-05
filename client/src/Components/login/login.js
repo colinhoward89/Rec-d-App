@@ -5,13 +5,13 @@ import React from 'react';;
 const Login = () => {
   const { loginWithRedirect } = useAuth0();
 
-  const handleLogin = async () => {
-    await loginWithRedirect({
-      appState: {
-        returnTo: "/home",
-      },
-    });
-  };
+  // const handleLogin = async () => {
+  //   await loginWithRedirect({
+  //     appState: {
+  //       returnTo: "/home",
+  //     },
+  //   });
+  // };
 
   return (
     <Button
@@ -26,7 +26,7 @@ const Login = () => {
           borderWidth: '3px',
         },
       }}
-      onClick={() => handleLogin()}
+      onClick={() => loginWithRedirect()}
     >
       Log In
     </Button>
