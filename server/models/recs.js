@@ -4,14 +4,14 @@ const recommendationSchema = mongoose.Schema(
   {
     to: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'RecUser',
       required: true,
     },
     sources: [
       {
         source: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: 'RecUser',
           required: false,
         },
         sourceComment: {

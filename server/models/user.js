@@ -15,12 +15,12 @@ const userSchema = mongoose.Schema({
   },
   requestRec: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'User',
+    ref: 'RecUser',
     required: false,
   },
   requestSent: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'User',
+    ref: 'RecUser',
     required: false,
   },
   image: {
@@ -33,4 +33,4 @@ const userSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('RecUser', userSchema);

@@ -8,7 +8,7 @@ const router = require('./router');
 const dbConnection = require('./db');
 
 const corsConfig = {
-  origin: ['http://localhost:3000', 'https://rec-d.vercel.app', 'https://rec-d-colinhoward89.vercel.app/, https://rec-d-git-main-colinhoward89.vercel.app/'],
+  origin: ['http://localhost:3000', 'https://rec-d.vercel.app', 'https://rec-d-colinhoward89.vercel.app/', 'https://rec-d-git-main-colinhoward89.vercel.app/',],
   credentials: true,
 };
 
