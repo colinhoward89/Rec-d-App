@@ -14,7 +14,7 @@ const Logout = () => {
         onClick={() => {
           navigate(`/recs`);
         }}>No</Button>
-    <Button style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold'}} variant="contained" onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000/' } })}>
+    <Button style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold'}} variant="contained" onClick={() => logout({ logoutParams: { returnTo: 'https://rec-d.vercel.app' } })}>
       Yes
     </Button>
     </div>
